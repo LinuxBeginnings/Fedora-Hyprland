@@ -25,6 +25,7 @@ COPR_REPOS=(
     opuk/bottom
     atim/lazygit
     atim/lazydocker
+    atim/starship
     wezfurlong/wezterm-nightly
     scottames/ghostty
 )
