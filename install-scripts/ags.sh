@@ -1,5 +1,5 @@
 #!/bin/bash
-# 💫 https://github.com/JaKooLit 💫 #
+# 💫 https://github.com/LinuxBeginnings 💫 #
 # Aylur's GTK Shell v 1.9.0 #
 # for desktop overview
 
@@ -75,7 +75,7 @@ printf "\n%.0s" {1..1}
 printf "${INFO} Kindly Standby...cloning and compiling ${SKY_BLUE}Aylur's GTK shell $ags_tag${RESET}...\n"
 printf "\n%.0s" {1..1}
 # Clone repository with the specified tag and capture git output into MLOG
-if git clone --depth=1 https://github.com/JaKooLit/ags_v1.9.0.git; then
+if git clone --depth=1 https://github.com/LinuxBeginnings/ags_v1.9.0.git; then
     cd ags_v1.9.0 || exit 1
     npm install
     meson setup build

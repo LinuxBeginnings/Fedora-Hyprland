@@ -5,7 +5,7 @@ Thank you for your interest in contributing to KooL Hyprland Projects! We welcom
 ## Getting Started
 
 1. Fork the branch development repository to your GitHub account. This will create a copy of this repository in your account. You can make changes to this copy without affecting the original repository.
-  - For fork this repository, click the **Fork** button in the top right corner of this page or click [here](https://github.com/JaKooLit/Fedora-Hyprland/fork).
+  - For fork this repository, click the **Fork** button in the top right corner of this page or click [here](https://github.com/LinuxBeginnings/Fedora-Hyprland/fork).
   - Make sure to uncheck the Copy the `main` branch only. This will copy the development branch and other branches (if any)
  
 2. Clone your forked repository to your local machine.
@@ -13,7 +13,7 @@ Thank you for your interest in contributing to KooL Hyprland Projects! We welcom
   - Use the following command to clone your forked repository to your local machine.
 
      ```bash
-     git clone --depth=1 -b development https://github.com/JaKooLit/Fedora-Hyprland.git
+     git clone --depth=1 -b development https://github.com/LinuxBeginnings/Fedora-Hyprland.git
      ```
 
 3. Create a new branch for your changes.
@@ -26,7 +26,7 @@ Thank you for your interest in contributing to KooL Hyprland Projects! We welcom
 
 4. Make your changes and commit them with a descriptive commit message.
 
-  - For example, to commit your changes, use the following command and make sure to follow the [commit message guidelines](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/COMMIT_MESSAGE_GUIDELINES.md).
+  - For example, to commit your changes, use the following command and make sure to follow the [commit message guidelines](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/COMMIT_MESSAGE_GUIDELINES.md).
 
      ```bash
      git commit -m "feat: add a new feature"
@@ -45,7 +45,7 @@ Thank you for your interest in contributing to KooL Hyprland Projects! We welcom
      1. Go to your forked repository.
      2. Click the **Compare & pull request** button next to your `your-branch-name` branch.
      3. Add a title and description for your pull request.
-     4. Click **Create pull request** and remember to add the relevant labels with using the [pull request template](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/.github/PULL_REQUEST_TEMPLATE.md).
+     4. Click **Create pull request** and remember to add the relevant labels with using the [pull request template](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/.github/PULL_REQUEST_TEMPLATE.md).
 
 ## Guidelines
 
@@ -55,15 +55,15 @@ Thank you for your interest in contributing to KooL Hyprland Projects! We welcom
 - Make sure all tests pass or fully tested before submitting your changes.
 - Keep your pull request focused and avoid including unrelated changes.
 - Remember to follow the following files before submitting your changes.
-  - [bug.yml](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/.github/ISSUE_TEMPLATE/bug.yml) - Use this template to create a report to help us improve.
-  - [feature.yml](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/.github/ISSUE_TEMPLATE/feature.yml) - Use this template to suggest a feature for this project.
-  - [documentation-update.yml](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/.github/ISSUE_TEMPLATE/documentation-update.yml) - Use this template to propose a change to the documentation.
-  - [PULL_REQUEST_TEMPLATE.md](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/.github/PULL_REQUEST_TEMPLATE.md) - Use this template to submit a pull request.
-  - [COMMIT_MESSAGE_GUIDELINES.md](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/COMMIT_MESSAGE_GUIDELINES.md) - Read this file to learn about the commit message guidelines.
-  - [CONTRIBUTING.md](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/CONTRIBUTING.md) - Read this file to learn about the contributing guidelines.
-  - [LICENSE](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/LICENSE.md) - Read this file to learn about the license.
-  - [README.md](https://github.com/JaKooLit/Fedora-Hyprland/blob/main/README.md) - Read this file to learn about the project.
+  - [bug.yml](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/.github/ISSUE_TEMPLATE/bug.yml) - Use this template to create a report to help us improve.
+  - [feature.yml](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/.github/ISSUE_TEMPLATE/feature.yml) - Use this template to suggest a feature for this project.
+  - [documentation-update.yml](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/.github/ISSUE_TEMPLATE/documentation-update.yml) - Use this template to propose a change to the documentation.
+  - [PULL_REQUEST_TEMPLATE.md](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/.github/PULL_REQUEST_TEMPLATE.md) - Use this template to submit a pull request.
+  - [COMMIT_MESSAGE_GUIDELINES.md](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/COMMIT_MESSAGE_GUIDELINES.md) - Read this file to learn about the commit message guidelines.
+  - [CONTRIBUTING.md](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/CONTRIBUTING.md) - Read this file to learn about the contributing guidelines.
+  - [LICENSE](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/LICENSE.md) - Read this file to learn about the license.
+  - [README.md](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/README.md) - Read this file to learn about the project.
 
 ## Contact
 
-If you have any questions, feel free to contact via [GitHub Discussions](https://github.com/JaKooLit/Fedora-Hyprland/discussions) or [Through Discord Server](https://discord.gg/kool-tech-world)
+If you have any questions, feel free to contact via [GitHub Discussions](https://github.com/LinuxBeginnings/Fedora-Hyprland/discussions) or [Through Discord Server](https://discord.gg/kool-tech-world)

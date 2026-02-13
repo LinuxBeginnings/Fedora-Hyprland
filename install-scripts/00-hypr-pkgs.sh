@@ -1,5 +1,5 @@
 #!/bin/bash
-# 💫 https://github.com/JaKooLit 💫 #
+# 💫 https://github.com/LinuxBeginnings 💫 #
 # Hyprland-Dots Packages #
 # edit your packages desired here. 
 # WARNING! If you remove packages here, dotfiles may not work properly.

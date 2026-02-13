@@ -3,7 +3,7 @@ description: Propose a change to the project documentation wiki
 title: "[Documentation update]: "
 labels: ["documentation_update"]
 assignees:
-  - JaKooLit
+  - LinuxBeginnings
 
 body:
   - type: textarea

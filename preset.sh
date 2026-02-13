@@ -1,4 +1,4 @@
-# 💫 https://github.com/JaKooLit 💫 #
+# 💫 https://github.com/LinuxBeginnings 💫 #
 
 # Define the options you want to preselect (either ON or OFF)
 # IMPORTANT: answer should be inside ""
