@@ -31,6 +31,7 @@ hypr_package=(
   openssl
   pamixer
   pavucontrol
+  pulseaudio-utils
   pipewire-alsa
   pipewire-utils
   playerctl
