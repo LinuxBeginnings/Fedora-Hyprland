@@ -1,5 +1,11 @@
 #!/bin/bash
-# 💫 https://github.com/JaKooLit 💫 #
+# ==================================================
+#  KoolDots (2026)
+#  Project URL: https://github.com/LinuxBeginnings
+#  License: GNU GPLv3
+#  SPDX-License-Identifier: GPL-3.0-or-later
+# ==================================================
+# 💫 https://github.com/KoolDots 💫 #
 # GTK Themes & ICONS and  Sourcing from a different Repo #
 
 engine=(
@@ -36,7 +42,7 @@ if [ -d "GTK-themes-icons" ]; then
 fi
 
 echo "$NOTE Cloning ${SKY_BLUE}GTK themes and Icons${RESET} repository..." 2>&1 | tee -a "$LOG"
-if git clone --depth=1 https://github.com/JaKooLit/GTK-themes-icons.git ; then
+if git clone --depth=1 https://github.com/KoolDots/GTK-themes-icons.git ; then
     cd GTK-themes-icons
     chmod +x auto-extract.sh
     ./auto-extract.sh

@@ -1,5 +1,11 @@
 #!/bin/bash
-# 💫 https://github.com/JaKooLit 💫 #
+# ==================================================
+#  KoolDots (2026)
+#  Project URL: https://github.com/LinuxBeginnings
+#  License: GNU GPLv3
+#  SPDX-License-Identifier: GPL-3.0-or-later
+# ==================================================
+# 💫 https://github.com/KoolDots 💫 #
 # Aylur's GTK Shell v 1.9.0 #
 # for desktop overview
 
@@ -75,7 +81,7 @@ printf "\n%.0s" {1..1}
 printf "${INFO} Kindly Standby...cloning and compiling ${SKY_BLUE}Aylur's GTK shell $ags_tag${RESET}...\n"
 printf "\n%.0s" {1..1}
 # Clone repository with the specified tag and capture git output into MLOG
-if git clone --depth=1 https://github.com/JaKooLit/ags_v1.9.0.git; then
+if git clone --depth=1 https://github.com/KoolDots/ags_v1.9.0.git; then
     cd ags_v1.9.0 || exit 1
     npm install
     meson setup build

@@ -1,5 +1,11 @@
 #!/bin/bash
-# https://github.com/JaKooLit
+# ==================================================
+#  KoolDots (2026)
+#  Project URL: https://github.com/LinuxBeginnings
+#  License: GNU GPLv3
+#  SPDX-License-Identifier: GPL-3.0-or-later
+# ==================================================
+# https://github.com/KoolDots
 
 # Set some colors for output messages
 OK="$(tput setaf 2)[OK]$(tput sgr0)"
@@ -19,7 +25,7 @@ RESET="$(tput sgr0)"
 
 # Variables
 Distro="Fedora-Hyprland"
-Github_URL="https://github.com/JaKooLit/$Distro.git"
+Github_URL="https://github.com/KoolDots/$Distro.git"
 Distro_DIR="$HOME/$Distro"
 
 printf "\n%.0s" {1..1}
