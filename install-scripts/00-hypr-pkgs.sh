@@ -81,7 +81,7 @@ copr_packages=(
     nwg-look
     SwayNotificationCenter
     pamixer
-    awww
+    swww
     wallust
 )
 
@@ -113,7 +113,7 @@ fi
 LOG="Install-Logs/install-$(date +%d-%H%M%S)_hypr-pkgs.log"
 # Check rofi presence and version (skip if >= 2.00)
 skip_rofi=false
-if rpm -q rofi &> /dev/null; then
+if rpm -q rofi &>/dev/null; then
     rofi_version=$(rpm -q --qf '%{VERSION}' rofi 2>/dev/null)
     if [ -n "$rofi_version" ] && [ "$(printf '%s\n' "2.00" "$rofi_version" | sort -V | head -n1)" = "2.00" ]; then
         skip_rofi=true
