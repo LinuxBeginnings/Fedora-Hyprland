@@ -34,6 +34,7 @@ COPR_REPOS=(
     atim/starship
     wezfurlong/wezterm-nightly
     scottames/ghostty
+    scottames/awww
 )
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##
