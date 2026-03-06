@@ -15,7 +15,7 @@ packages=(
   rofi
   ImageMagick
   SwayNotificationCenter
-  swww
+  awww
   wallust
   waybar
   wl-clipboard
