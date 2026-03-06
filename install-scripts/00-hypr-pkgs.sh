@@ -111,11 +111,23 @@ fi
 
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/install-$(date +%d-%H%M%S)_hypr-pkgs.log"
+# Check rofi presence and version (skip if >= 2.00)
+skip_rofi=false
+if rpm -q rofi &> /dev/null; then
+    rofi_version=$(rpm -q --qf '%{VERSION}' rofi 2>/dev/null)
+    if [ -n "$rofi_version" ] && [ "$(printf '%s\n' "2.00" "$rofi_version" | sort -V | head -n1)" = "2.00" ]; then
+        skip_rofi=true
+        echo "${NOTE} Rofi $rofi_version detected (>= 2.00). Skipping removal/reinstall." | tee -a "$LOG"
+    fi
+fi
 
 # conflicting packages removal
 overall_failed=0
 printf "\n%s - ${SKY_BLUE}Removing some packages${RESET} as it conflicts with KooL's Hyprland Dots \n" "${NOTE}"
 for PKG in "${uninstall[@]}"; do
+    if [ "$PKG" = "rofi" ] && [ "$skip_rofi" = "true" ]; then
+        continue
+    fi
     uninstall_package "$PKG" 2>&1 | tee -a "$LOG"
     if [ $? -ne 0 ]; then
         overall_failed=1
@@ -132,6 +144,9 @@ printf "\n%.0s" {1..1}
 printf "\n%s - Installing ${SKY_BLUE}KooL's hyprland necessary packages${RESET} .... \n" "${NOTE}"
 
 for PKG1 in "${hypr_package[@]}" "${hypr_package_2[@]}" "${copr_packages[@]}" "${Extra[@]}"; do
+    if [ "$PKG1" = "rofi" ] && [ "$skip_rofi" = "true" ]; then
+        continue
+    fi
     install_package "$PKG1" "$LOG"
 done
 
