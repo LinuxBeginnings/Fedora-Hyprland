@@ -39,6 +39,7 @@ hypr_package=(
     pavucontrol
     pipewire-alsa
     pipewire-utils
+    pulseaudio-utils
     playerctl
     python3-requests
     python3-pip
