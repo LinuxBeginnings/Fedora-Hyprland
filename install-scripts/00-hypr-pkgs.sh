@@ -47,6 +47,7 @@ hypr_package=(
     qt5ct
     qt6ct
     qt6-qtsvg
+    rsync
     rofi
     slurp
     swappy
