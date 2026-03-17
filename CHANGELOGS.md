@@ -1,5 +1,13 @@
 ## CHANGELOGS
 
+## Mar 2026
+
+- Added `rsync` to dependencies
+- Added `Toggle-Active-Window-Audio.sh`
+- Updated discord link
+- Migrated jakloolit links to LinuxBeginnings
+- Added `rofi` presence and version check
+
 ## Dec 2025
 
 - Added `hyprland-guituils`

@@ -1,8 +1,14 @@
 #!/bin/bash
-# 💫 https://github.com/LinuxBeginnings 💫 #
+# ==================================================
+#  KoolDots (2026)
+#  Project URL: https://github.com/LinuxBeginnings
+#  License: GNU GPLv3
+#  SPDX-License-Identifier: GPL-3.0-or-later
+# ==================================================
+# 💫 https://github.com/KoolDots 💫 #
 # SDDM themes #
 
-source_theme="https://github.com/LinuxBeginnings/simple-sddm-2.git"
+source_theme="https://github.com/KoolDots/simple-sddm-2.git"
 theme_name="simple_sddm_2"
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##
