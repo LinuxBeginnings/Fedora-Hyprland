@@ -2,6 +2,7 @@
 
 ## Mar 2026
 
+- Fixed: GTK themes was still pointing to JakooLit
 - Added `rsync` to dependencies
 - Added `Toggle-Active-Window-Audio.sh`
 - Updated discord link
