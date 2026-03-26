@@ -8,6 +8,7 @@
 - Updated discord link
 - Migrated jakloolit links to LinuxBeginnings
 - Added `rofi` presence and version check
+- Switched `sddm_theme.sh` URL to `LinuxBeginnings`
 
 ## Dec 2025
 
