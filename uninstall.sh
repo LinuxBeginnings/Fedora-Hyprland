@@ -149,6 +149,7 @@ packages=(
     "hypridle" "hyprland idling agent" "off"
     "hyprlock" "lockscreen" "off"
     "hyprpolkitagent" "hyprland polkit agent" "off"
+    "xfce-polkit" "polkit agent" "off"
     "hyprland" "hyprland main package" "off"
 )
 
