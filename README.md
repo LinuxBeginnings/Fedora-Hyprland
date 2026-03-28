@@ -264,7 +264,7 @@ env = WLR_RENDERER_ALLOW_SOFTWARE,1
 #### ✍️ Contributing
 
 - As stated above, these script does not contain actual config files. These are only the installer of packages
-- If you want to contribute and/or test the Hyprland-Dotfiles (development branch), [`Hyprland-Dots-Development`](https://github.com/JaKooLit/Hyprland-Dots/tree/development)
+- If you want to contribute and/or test the Hyprland-Dotfiles (development branch), [`Hyprland-Dots-Development`](https://github.com/LinuxBeginnings/Hyprland-Dots/tree/development)
 - Want to contribute on KooL-Hyprland-Dots Click [`HERE`](https://github.com/LinuxBeginnings/Hyprland-Dots/blob/main/CONTRIBUTING.md) for a guide how to contribute
 - Want to contribute on This Installer? Click [`HERE`](https://github.com/LinuxBeginnings/Fedora-Hyprland/blob/main/CONTRIBUTING.md) for a guide how to contribute
 
