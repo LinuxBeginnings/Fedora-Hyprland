@@ -2,6 +2,7 @@
 
 ## Mar 2026
 
+- Added `mate-polkit` and `xfce4-polkit` as fallbacks
 - Added `rsync` to dependencies
 - Added `Toggle-Active-Window-Audio.sh`
 - Updated discord link
