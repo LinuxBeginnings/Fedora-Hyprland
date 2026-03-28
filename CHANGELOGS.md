@@ -3,6 +3,7 @@
 ## Mar 2026
 
 - Added `mate-polkit` and `xfce4-polkit` as fallbacks
+- Fixed: GTK themes was still pointing to JakooLit
 - Added `rsync` to dependencies
 - Added `Toggle-Active-Window-Audio.sh`
 - Updated discord link
