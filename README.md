@@ -271,7 +271,7 @@ env = WLR_RENDERER_ALLOW_SOFTWARE,1
 #### 👍👍👍 Thanks and Credits!
 
 - [`Hyprland`](https://hyprland.org/) Of course to Hyprland and @vaxerski for this awesome Dynamic Tiling Manager.
-- [`HYPRLAND COPR REPO`](https://copr.fedorainfracloud.org/coprs/solopasha/hyprland/) - a shout out to the one who created and maintaining Hyprland COPR Repo
+- [`sdelger Hyprland COPR Repo`](https://copr.fedorainfracloud.org/coprs/sdegler/hyprland/) - a shout out to `@sgedler` on our Discord server, who is maintaining the Hyprland COPR Repo
 
 ### 💖 Support
 
