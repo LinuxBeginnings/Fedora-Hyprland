@@ -7,6 +7,8 @@
     ```bash
     sudo dnf install qt5-qtdeclarative qt5-qtquickcontrols2 qt6-qtdeclarative qt6-qtquickcontrols2
     ```
+- Improved: Error handling in the `install.sh` script
+    - Thank you `@moukhtar22` for finding this and filing an issue
 
 ## Mar 2026
 
