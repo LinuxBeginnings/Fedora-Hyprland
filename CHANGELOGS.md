@@ -1,5 +1,13 @@
 ## CHANGELOGS
 
+## Apr 2026
+
+- Fixed: Issue with polkit
+    - Added missing QT kvantum packages
+    ```bash
+    sudo dnf install qt5-qtdeclarative qt5-qtquickcontrols2 qt6-qtdeclarative qt6-qtquickcontrols2
+    ```
+
 ## Mar 2026
 
 - Added `mate-polkit` and `xfce4-polkit` as fallbacks
