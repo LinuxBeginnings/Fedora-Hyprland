@@ -9,6 +9,8 @@
     ```
 - Improved: Error handling in the `install.sh` script
     - Thank you `@moukhtar22` for finding this and filing an issue
+- Removed invalid `qt` packages
+    - Thank you `@moukhtar22` for finding this and filing an issue
 
 ## Mar 2026
 

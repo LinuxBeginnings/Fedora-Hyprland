@@ -114,6 +114,7 @@ packages=(
     "ImageMagick" "Image manipulation tool" "off"
     "kitty" "kitty-terminal" "off"
     "kvantum" "QT apps theming" "off"
+    "kvantum-qt5" "QT apps theming" "off"
     "qt5-qtdeclarative" "QT apps theming" "off"
     "qt5-qtquickcontrols2" "QT apps theming" "off"
     "qt6-qtdeclarative" "QT apps theming" "off"
