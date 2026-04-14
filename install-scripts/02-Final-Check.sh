@@ -12,6 +12,9 @@
 packages=(
     cliphist
     kvantum
+    qt5-qtdeclarative
+    qt5-qtquickcontrols2
+    qt6-qtdeclarative
     rofi
     ImageMagick
     SwayNotificationCenter

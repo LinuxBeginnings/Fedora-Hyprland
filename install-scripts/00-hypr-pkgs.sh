@@ -32,6 +32,9 @@ hypr_package=(
     jq
     kitty
     kvantum
+    qt5-qtdeclarative
+    qt5-qtquickcontrols2
+    qt6-qtdeclarative
     nano
     network-manager-applet
     openssl
