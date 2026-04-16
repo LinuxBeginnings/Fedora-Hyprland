@@ -11,6 +11,7 @@
     - Thank you `@moukhtar22` for finding this and filing an issue
 - Removed invalid `qt` packages
     - Thank you `@moukhtar22` for finding this and filing an issue
+- Added `hyrpsunset`
 
 ## Mar 2026
 

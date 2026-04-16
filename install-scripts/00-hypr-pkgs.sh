@@ -72,6 +72,7 @@ hypr_package_2=(
     brightnessctl
     btop
     cava
+    hyprsunset
     loupe
     fastfetch
     gnome-system-monitor
