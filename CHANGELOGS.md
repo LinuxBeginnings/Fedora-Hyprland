@@ -1,5 +1,28 @@
 ## CHANGELOGS
 
+## Apr 2026
+
+- Fixed: Issue with polkit
+    - Added missing QT kvantum packages
+    ```bash
+    sudo dnf install qt5-qtdeclarative qt5-qtquickcontrols2 qt6-qtdeclarative qt6-qtquickcontrols2
+    ```
+- Improved: Error handling in the `install.sh` script
+    - Thank you `@moukhtar22` for finding this and filing an issue
+- Removed invalid `qt` packages
+    - Thank you `@moukhtar22` for finding this and filing an issue
+- Added `hyrpsunset`
+- Fixed error handling in the instal.sh script
+- Added missing KDE kvantum apps for Polkit
+- Fixed missing element in youtube thumbnail link
+- Updated COPR maintainer to sdegler
+- Fixed discord link
+- Fixing links
+- Add: xfce polkit to resolve issues with HL dots
+- Fixed sddm theme URL (#2)
+- Fixed sddm theme URL
+- GTK theme repo moved to new location
+
 ## Mar 2026
 
 - Added `mate-polkit` and `xfce4-polkit` as fallbacks

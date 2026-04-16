@@ -32,6 +32,10 @@ hypr_package=(
     jq
     kitty
     kvantum
+    kvantum-qt5
+    qt5-qtdeclarative
+    qt5-qtquickcontrols2
+    qt6-qtdeclarative
     nano
     network-manager-applet
     openssl
@@ -68,6 +72,7 @@ hypr_package_2=(
     brightnessctl
     btop
     cava
+    hyprsunset
     loupe
     fastfetch
     gnome-system-monitor
