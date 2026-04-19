@@ -2,6 +2,7 @@
 
 ## Apr 2026
 
+- Removed overwriting of fastfetch config
 - Fixed: Issue with polkit
     - Added missing QT kvantum packages
     ```bash
