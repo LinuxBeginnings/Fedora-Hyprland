@@ -25,6 +25,7 @@ BLUE="$(tput setaf 4)"
 SKY_BLUE="$(tput setaf 6)"
 RESET="$(tput sgr0)"
 
+
 # Set a high-contrast whiptail theme unless the user already provided one
 if [ -z "${NEWT_COLORS:-}" ]; then
     export NEWT_COLORS='
