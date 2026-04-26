@@ -2,6 +2,9 @@
 
 ## Apr 2026
 
+- Fixed download link in `install.sh`
+    - Was pointing to old `Jakoolit` repo
+    - Thank you `@0x733` for finding and fixing that
 - Removed overwriting of fastfetch config
 - Fixed: Issue with polkit
     - Added missing QT kvantum packages
