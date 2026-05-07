@@ -20,6 +20,7 @@ Extra=(
 hypr_package=(
     bc
     curl
+    ddcutil # Needed for ExternalBrightness script
     findutils
     gawk
     git
