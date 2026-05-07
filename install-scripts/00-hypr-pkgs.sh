@@ -54,6 +54,7 @@ hypr_package=(
     rsync
     rofi
     slurp
+    socat # Needed for Tak0 scripts
     swappy
     unzip # required later
     uwsm  # In case use logins with UWSM managed option
