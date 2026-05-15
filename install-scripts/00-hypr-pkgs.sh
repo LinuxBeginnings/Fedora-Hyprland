@@ -91,7 +91,7 @@ copr_packages=(
     nwg-look
     SwayNotificationCenter
     pamixer
-    swww
+    awww
     wallust
 )
 
