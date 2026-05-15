@@ -97,10 +97,7 @@ copr_packages=(
 
 # List of packages to uninstall as it conflicts some packages
 uninstall=(
-    aylurs-gtk-shell
-    dunst
     mako
-    rofi
 )
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##
