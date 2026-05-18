@@ -1,5 +1,21 @@
 ## CHANGELOGS
 
+## May 2026
+
+- Fixed:
+    - Some scripts not executable
+    - Set dark theme for whiptail fixes colors washed out on some terminals
+        - Removed some duplicate colors
+        - Fixed hight on OK/Cancel button
+    - Hyprland-Dots download error due to bad link
+- Added:
+    - `update-deps.sh` Install new dependencies since last install
+        - You don't have to re-install everything, verifies you have all new deps
+        - If not it will install them
+    - `ddcutil` to support external monitor brightness
+    - `socat` to fix `Tak0` scripts
+    - `stylua` COPR for LUA support
+
 ## Apr 2026
 
 - Fixed download link in `install.sh`

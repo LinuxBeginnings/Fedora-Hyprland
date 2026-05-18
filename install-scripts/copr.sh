@@ -35,6 +35,7 @@ COPR_REPOS=(
     wezfurlong/wezterm-nightly
     scottames/ghostty
     scottames/awww
+    yorickpeterse/stylua
 )
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##
