@@ -25,7 +25,6 @@ BLUE="$(tput setaf 4)"
 SKY_BLUE="$(tput setaf 6)"
 RESET="$(tput sgr0)"
 
-
 # Set a high-contrast whiptail theme unless the user already provided one
 if [ -z "${NEWT_COLORS:-}" ]; then
     export NEWT_COLORS='
@@ -278,7 +277,7 @@ while true; do
     if [[ "$dots_selected" == "OFF" ]]; then
         # Show a note about not selecting the "dots" option
         if ! whiptail --title "KooL Hyprland Dot Files" --yesno \
-            "You have not selected to install the pre-configured KooL Hyprland dotfiles.\n\nKindly NOTE that if you proceed without Dots, Hyprland will start with default vanilla Hyprland configuration and I won't be able to give you support.\n\nWould you like to continue install without KooL Hyprland Dots or return to choices/options?" \
+            "You have not selected to install the pre-configured KoolDots Hyprland dotfiles.\n\nKindly NOTE that if you proceed without dotfiles, and this is a *new* install, not an *upgrade*, Hyprland will start with default vanilla Hyprland configuration and I won't be able to give you support.\n\nWould you like to continue install without KooL Hyprland Dots or return to choices/options?" \
             --yes-button "Continue" --no-button "Return" 15 90; then
             echo "🔙 Returning to options..." | tee -a "$LOG"
             continue
