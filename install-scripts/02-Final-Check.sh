@@ -28,6 +28,7 @@ packages=(
     hypridle
     hyprlock
     hyprland
+    yazi
 )
 
 # Local packages that should be in /usr/local/bin/
