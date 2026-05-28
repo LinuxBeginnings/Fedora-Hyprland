@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ==================================================
 #  KoolDots (2026)
 #  Project URL: https://github.com/LinuxBeginnings
@@ -54,11 +54,34 @@ fi
 
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/00_CHECK-$(date +%d-%H%M%S)_installed.log"
+MIN_YAZI_VERSION="26.5.0"
+
+version_ge() {
+    [ "$(printf '%s\n' "$2" "$1" | sort -V | head -n1)" = "$2" ]
+}
+
+needs_yazi_install() {
+    if rpm -q yazi &>/dev/null; then
+        local current_version
+        current_version="$(rpm -q --qf '%{VERSION}' yazi 2>/dev/null)"
+        if [ -n "$current_version" ] && version_ge "$current_version" "$MIN_YAZI_VERSION"; then
+            return 1
+        fi
+    fi
+    return 0
+}
 
 printf "\n%s - Final Check if all ${SKY_BLUE}Essential packages${RESET} were installed \n" "${NOTE}"
 # Initialize an empty array to hold missing packages
 missing=()
 local_missing=()
+# Ensure yazi meets minimum version before final package check
+if needs_yazi_install; then
+    echo "${WARN} yazi is missing or below ${MIN_YAZI_VERSION}. Running install-scripts/yazi.sh." | tee -a "$LOG"
+    bash "$SCRIPT_DIR/yazi.sh"
+else
+    echo "${OK} yazi meets minimum version requirement (>= ${MIN_YAZI_VERSION})." | tee -a "$LOG"
+fi
 
 # Function to check if a package is installed using rpm (Fedora)
 is_installed_rpm() {
