@@ -13,7 +13,7 @@
 
 # add packages wanted here
 Extra=(
-
+    yazi
 )
 
 # packages neeeded
