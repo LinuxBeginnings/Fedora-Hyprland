@@ -1,5 +1,13 @@
 ## CHANGELOGS
 
+## Aug 2026
+
+- Fixed:
+    - SDDM background being overwriten
+- Added:
+    - UV and PIPX to dependencies
+    - `hyprMOD` install script for future consideration
+
 ## May 2026
 
 - Fixed:

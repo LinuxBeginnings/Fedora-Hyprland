@@ -14,6 +14,8 @@
 # add packages wanted here
 Extra=(
     yazi
+    uv
+    pipx
 )
 
 # packages neeeded
