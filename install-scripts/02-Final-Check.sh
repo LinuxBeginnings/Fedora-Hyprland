@@ -28,6 +28,7 @@ packages=(
     hypridle
     hyprlock
     hyprland
+    nwg-dock-hyprland
     yazi
 )
 

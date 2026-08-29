@@ -89,6 +89,7 @@ hypr_package_2=(
 
 copr_packages=(
     nwg-displays
+    nwg-dock-hyprland
     cliphist
     nwg-look
     SwayNotificationCenter

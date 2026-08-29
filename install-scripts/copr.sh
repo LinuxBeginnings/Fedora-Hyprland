@@ -13,6 +13,7 @@
 # erikreider/SwayNotificationCenter swaync
 # errornointernet/packages - wallust ONLY
 # tofik/nwg-shell - nwg-displays ONLY
+# nightishaman/nwg-shell - nwg-dock-hyprland ONLY
 
 # List of COPR repositories to be added and enabled
 # solopasha/hyprland   # No longer getting updated
@@ -26,6 +27,7 @@ COPR_REPOS=(
     erikreider/SwayNotificationCenter
     errornointernet/packages
     tofik/nwg-shell
+    nightishaman/nwg-shell
     alternateved/eza
     lihaohong/yazi
     opuk/bottom
@@ -86,6 +88,7 @@ printf "\n%.0s" {1..1}
 declare -A COPR_PACKAGE_LIMITS=(
     ["errornointernet/packages"]="wallust"
     ["tofik/nwg-shell"]="nwg-displays"
+    ["nightishaman/nwg-shell"]="nwg-dock-hyprland"
 )
 
 # Function to modify repo files to restrict package installation
