@@ -6,6 +6,7 @@
     - Version of `nwg-dock-hyprland` not compatible with `-g` flag
         - Needed to mask `dropdown-terminal`
         - Building from source instead of COPR
+        - Enhanced error checking and process termination issues
     - SDDM background being overwriten
 - Added:
     - UV and PIPX to dependencies

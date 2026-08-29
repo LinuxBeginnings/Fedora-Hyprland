@@ -83,47 +83,43 @@ if git clone --recursive ${git_ref:+-b "$git_ref"} https://github.com/nwg-piotr/
     export CGO_ENABLED=1
 
     echo "${INFO} Downloading Go module dependencies..." | tee -a "$LOG"
-    if [ -f Makefile ] && grep -q '^get:' Makefile; then
-        make get 2>&1 | tee -a "$MLOG" || "$GO_BIN" mod download 2>&1 | tee -a "$MLOG"
-    else
-        "$GO_BIN" mod download 2>&1 | tee -a "$MLOG"
-    fi
+    "$GO_BIN" mod download 2>&1 | tee -a "$MLOG"
 
     echo "${INFO} Building nwg-dock-hyprland..." | tee -a "$LOG"
     BUILD_SUCCESS=0
+    rm -f nwg-dock-hyprland bin/nwg-dock-hyprland 2>/dev/null || true
+
     if "$GO_BIN" build -v -o bin/nwg-dock-hyprland . 2>&1 | tee -a "$MLOG"; then
-        BUILD_SUCCESS=1
+        [ -f bin/nwg-dock-hyprland ] && [ -x bin/nwg-dock-hyprland ] && BUILD_SUCCESS=1
     elif [ -f Makefile ] && grep -q '^build:' Makefile; then
         if make -B build 2>&1 | tee -a "$MLOG"; then
-            BUILD_SUCCESS=1
+            if [ -f bin/nwg-dock-hyprland ] && [ -x bin/nwg-dock-hyprland ]; then
+                BUILD_SUCCESS=1
+            elif [ -f nwg-dock-hyprland ] && [ -x nwg-dock-hyprland ]; then
+                BUILD_SUCCESS=1
+            fi
         fi
     fi
 
-    if [ $BUILD_SUCCESS -eq 0 ]; then
-        if "$GO_BIN" build -v -o nwg-dock-hyprland . 2>&1 | tee -a "$MLOG"; then
-            BUILD_SUCCESS=1
-        fi
+    BIN_SRC=""
+    if [ -f bin/nwg-dock-hyprland ] && [ -x bin/nwg-dock-hyprland ]; then
+        BIN_SRC="bin/nwg-dock-hyprland"
+    elif [ -f nwg-dock-hyprland ] && [ -x nwg-dock-hyprland ]; then
+        BIN_SRC="nwg-dock-hyprland"
     fi
 
-    if [ $BUILD_SUCCESS -eq 1 ]; then
+    if [ "$BUILD_SUCCESS" -eq 1 ] && [ -n "$BIN_SRC" ]; then
         if [ $DO_INSTALL -eq 1 ]; then
             echo "${INFO} Installing nwg-dock-hyprland binary and data files..." | tee -a "$LOG"
 
-            # Use make install if available, with fallback to manual installation
-            if [ -f Makefile ] && grep -q '^install:' Makefile; then
-                sudo make install PREFIX=/usr/local 2>&1 | tee -a "$MLOG" || sudo make install 2>&1 | tee -a "$MLOG" || true
-            fi
+            # Gracefully stop existing instance (exact binary match only to avoid terminating installer script)
+            pkill -x nwg-dock-hyprland 2>/dev/null || true
 
-            # Ensure binary is placed in /usr/local/bin and /usr/bin
-            if [ -f bin/nwg-dock-hyprland ]; then
-                sudo install -d -m 0755 /usr/local/bin
-                sudo install -m 0755 bin/nwg-dock-hyprland /usr/local/bin/nwg-dock-hyprland
-                sudo install -m 0755 bin/nwg-dock-hyprland /usr/bin/nwg-dock-hyprland 2>/dev/null || true
-            elif [ -f nwg-dock-hyprland ]; then
-                sudo install -d -m 0755 /usr/local/bin
-                sudo install -m 0755 nwg-dock-hyprland /usr/local/bin/nwg-dock-hyprland
-                sudo install -m 0755 nwg-dock-hyprland /usr/bin/nwg-dock-hyprland 2>/dev/null || true
-            fi
+            # Install binary to /usr/local/bin and /usr/bin
+            sudo install -d -m 0755 /usr/local/bin
+            sudo install -m 0755 "$BIN_SRC" /usr/local/bin/nwg-dock-hyprland
+            sudo install -d -m 0755 /usr/bin
+            sudo install -m 0755 "$BIN_SRC" /usr/bin/nwg-dock-hyprland 2>/dev/null || true
 
             # Ensure data assets (CSS and images) are installed to standard share paths
             sudo install -d -m 0755 /usr/local/share/nwg-dock-hyprland
