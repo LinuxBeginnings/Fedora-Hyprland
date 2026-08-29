@@ -28,13 +28,12 @@ packages=(
     hypridle
     hyprlock
     hyprland
-    nwg-dock-hyprland
     yazi
 )
 
 # Local packages that should be in /usr/local/bin/
 local_pkgs_installed=(
-
+    nwg-dock-hyprland
 )
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##
@@ -72,6 +71,13 @@ needs_yazi_install() {
     return 0
 }
 
+needs_nwg_dock_install() {
+    if ! command -v nwg-dock-hyprland &>/dev/null || [ ! -d "/usr/share/nwg-dock-hyprland/images" ]; then
+        return 0
+    fi
+    return 1
+}
+
 printf "\n%s - Final Check if all ${SKY_BLUE}Essential packages${RESET} were installed \n" "${NOTE}"
 # Initialize an empty array to hold missing packages
 missing=()
@@ -82,6 +88,14 @@ if needs_yazi_install; then
     bash "$SCRIPT_DIR/yazi.sh"
 else
     echo "${OK} yazi meets minimum version requirement (>= ${MIN_YAZI_VERSION})." | tee -a "$LOG"
+fi
+
+# Ensure nwg-dock-hyprland is installed with required assets before final check
+if needs_nwg_dock_install; then
+    echo "${WARN} nwg-dock-hyprland is missing or incomplete. Running install-scripts/nwg-dock-hyprland.sh." | tee -a "$LOG"
+    bash "$SCRIPT_DIR/nwg-dock-hyprland.sh"
+else
+    echo "${OK} nwg-dock-hyprland meets requirements." | tee -a "$LOG"
 fi
 
 # Function to check if a package is installed using rpm (Fedora)

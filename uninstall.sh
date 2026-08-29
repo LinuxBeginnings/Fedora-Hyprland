@@ -286,7 +286,6 @@ COPR_REPOS=(
   erikreider/SwayNotificationCenter
   errornointernet/packages
   tofik/nwg-shell
-  nightishaman/nwg-shell
   errornointernet/quickshell 
 )
 remove_copr "${COPR_REPOS[@]}" 
