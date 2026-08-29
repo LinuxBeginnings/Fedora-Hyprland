@@ -27,6 +27,8 @@ source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"
 
 LOG="$PARENT_DIR/Install-Logs/install-$(date +%d-%H%M%S)_nwg_dock_hyprland.log"
 MLOG="$PARENT_DIR/Install-Logs/install-$(date +%d-%H%M%S)_nwg_dock_hyprland2.log"
+USER_LOCAL_DATA_DIR="$HOME/.local/share/nwg-dock-hyprland"
+USER_LOCAL_CONFIG_DIR="$HOME/.config/nwg-dock-hyprland"
 
 # Build-time dependencies for nwg-dock-hyprland (Fedora)
 DEPS=(
@@ -140,6 +142,26 @@ if git clone --recursive ${git_ref:+-b "$git_ref"} https://github.com/nwg-piotr/
             if [ -d images ]; then
                 sudo cp -r images/* /usr/local/share/nwg-dock-hyprland/images/ 2>/dev/null || true
                 sudo cp -r images/* /usr/share/nwg-dock-hyprland/images/ 2>/dev/null || true
+            fi
+
+            # Ensure user-local assets are present (runtime may read from ~/.local/share or ~/.config)
+            mkdir -p "$USER_LOCAL_DATA_DIR/images"
+            mkdir -p "$USER_LOCAL_CONFIG_DIR/wallust"
+
+            if [ -f config/style.css ]; then
+                cp -f config/style.css "$USER_LOCAL_DATA_DIR/style.css"
+                if [ ! -s "$USER_LOCAL_CONFIG_DIR/style.css" ]; then
+                    cp -f config/style.css "$USER_LOCAL_CONFIG_DIR/style.css"
+                fi
+            elif [ -f style.css ]; then
+                cp -f style.css "$USER_LOCAL_DATA_DIR/style.css"
+                if [ ! -s "$USER_LOCAL_CONFIG_DIR/style.css" ]; then
+                    cp -f style.css "$USER_LOCAL_CONFIG_DIR/style.css"
+                fi
+            fi
+
+            if [ -d images ]; then
+                cp -f images/* "$USER_LOCAL_DATA_DIR/images/" 2>/dev/null || true
             fi
 
             # Clean up source dir
