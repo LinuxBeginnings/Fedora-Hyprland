@@ -5,6 +5,8 @@
 - Fixed:
     - SDDM background being overwriten
 - Added:
+    - `nwg-dock-hyprland`
+        - Building from source COPR version had issues
     - UV and PIPX to dependencies
     - `hyprMOD` install script for future consideration
 
