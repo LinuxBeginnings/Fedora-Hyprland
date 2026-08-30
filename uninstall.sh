@@ -124,6 +124,7 @@ packages=(
     "network-manager-applet" "network-manager-applet" "off"
     "nvtop" "gpu resource monitor" "off"
     "nwg-displays" "display monitor configuration app" "off"
+    "nwg-dock-hyprland" "dock application" "off"
     "nwg-look" "gtk settings app" "off"
     "pamixer" "pamixer" "off"
     "pavucontrol" "pavucontrol" "off"

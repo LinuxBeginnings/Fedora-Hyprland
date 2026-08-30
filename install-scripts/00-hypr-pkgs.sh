@@ -159,4 +159,9 @@ for PKG1 in "${hypr_package[@]}" "${hypr_package_2[@]}" "${copr_packages[@]}" "$
     install_package "$PKG1" "$LOG"
 done
 
+# Install nwg-dock-hyprland via dedicated installer script
+if [ -f "$SCRIPT_DIR/nwg-dock-hyprland.sh" ]; then
+    bash "$SCRIPT_DIR/nwg-dock-hyprland.sh"
+fi
+
 printf "\n%.0s" {1..2}
