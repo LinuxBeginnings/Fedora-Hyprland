@@ -72,7 +72,10 @@ needs_yazi_install() {
 }
 
 needs_nwg_dock_install() {
-    if ! command -v nwg-dock-hyprland &>/dev/null || [ ! -d "/usr/share/nwg-dock-hyprland/images" ]; then
+    if ! command -v nwg-dock-hyprland &>/dev/null && [ ! -x "/usr/local/bin/nwg-dock-hyprland" ] && [ ! -x "/usr/bin/nwg-dock-hyprland" ]; then
+        return 0
+    fi
+    if [ ! -d "/usr/local/share/nwg-dock-hyprland/images" ] && [ ! -d "/usr/share/nwg-dock-hyprland/images" ]; then
         return 0
     fi
     return 1
@@ -111,9 +114,9 @@ for pkg in "${packages[@]}"; do
     fi
 done
 
-# Check for local packages
+# Check for local packages / required binaries
 for pkg1 in "${local_pkgs_installed[@]}"; do
-    if ! [ -f "/usr/local/bin/$pkg1" ]; then
+    if ! command -v "$pkg1" >/dev/null 2>&1 && ! [ -x "/usr/local/bin/$pkg1" ] && ! [ -x "/usr/bin/$pkg1" ]; then
         local_missing+=("$pkg1")
     fi
 done
@@ -131,9 +134,9 @@ else
     fi
 
     if [ ${#local_missing[@]} -ne 0 ]; then
-        echo "${WARN} The following local packages are missing from /usr/local/bin/ and will be logged:"
+        echo "${WARN} The following local packages are missing and will be logged:"
         for pkg1 in "${local_missing[@]}"; do
-            echo "$pkg1 is not installed. can't find it in /usr/local/bin/"
+            echo "$pkg1 is not installed. can't find it in PATH, /usr/local/bin/, or /usr/bin/"
             echo "$pkg1" >>"$LOG" # Log the missing local package to the file
         done
     fi

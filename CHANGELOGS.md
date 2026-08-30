@@ -4,6 +4,8 @@
 
 - Fixed:
     - SDDM background being overwriten
+    - Final check looked for `nwg-dock-hyprland` in `/usr/bin` not `/usr/local/bin`
+        - Thanks @sdegler for finding that
 - Added:
     - `nwg-dock-hyprland`
         - Building from source COPR version had issues
