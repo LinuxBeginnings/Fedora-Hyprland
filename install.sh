@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ==================================================
 #  KoolDots (2026)
 #  Project URL: https://github.com/LinuxBeginnings
@@ -6,8 +6,6 @@
 #  SPDX-License-Identifier: GPL-3.0-or-later
 # ==================================================
 # https://github.com/KoolDots
-
-clear
 
 # Set some colors for output messages
 OK="$(tput setaf 2)[OK]$(tput sgr0)"
