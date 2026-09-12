@@ -1,5 +1,11 @@
 ## CHANGELOGS
 
+## Sep 2026
+
+- Fixed:
+    - Wrong GH URL in `auto-install.sh`
+        - Thank you `DerRKDCB` for finding that
+
 ## Aug 2026
 
 - Fixed:

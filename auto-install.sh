@@ -25,13 +25,12 @@ RESET="$(tput sgr0)"
 
 # Variables
 Distro="Fedora-Hyprland"
-Github_URL="https://github.com/KoolDots/$Distro.git"
+Github_URL="https://github.com/LinuxBeginnings/$Distro.git"
 Distro_DIR="$HOME/$Distro"
 
 printf "\n%.0s" {1..1}
 
-if ! command -v git &> /dev/null
-then
+if ! command -v git &>/dev/null; then
     echo "${INFO} Git not found! ${SKY_BLUE}Installing Git...${RESET}"
     if ! sudo dnf install -y git; then
         echo "${ERROR} Failed to install Git. Exiting."
