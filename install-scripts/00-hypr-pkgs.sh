@@ -60,6 +60,7 @@ hypr_package=(
     socat # Needed for Tak0 scripts
     swappy
     unzip # required later
+    util-linux # provides flock, needed by Hyprland-Dots RofiEmoji.sh
     uwsm  # In case use logins with UWSM managed option
     waybar
     wget2

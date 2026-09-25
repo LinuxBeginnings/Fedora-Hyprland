@@ -9,7 +9,7 @@
     - quickshell and XDPH from install menu
         - They are now installed by default
 - Added:
-    - dependency check for `utils-linux/flock` for rofi emoji update
+    - dependency check for `util-linux/flock` for rofi emoji update
 
 ## Aug 2026
 
