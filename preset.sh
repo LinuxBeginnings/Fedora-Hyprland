@@ -35,9 +35,6 @@ sddm="ON"
 ### install and download SDDM themes
 sddm_theme="ON"
 
-###-Install XDG-DESKTOP-PORTAL-HYPRLAND? (For proper Screen Share ie OBS)
-xdph="ON"
-
 ### Shell extension. Bash alternative
 ###-Install zsh, oh-my-zsh
 zsh="ON"
