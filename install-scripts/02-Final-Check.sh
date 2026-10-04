@@ -28,12 +28,16 @@ packages=(
     hypridle
     hyprlock
     hyprland
+    hyprland-guiutils
+    lua
     yazi
 )
 
 # Local packages that should be in /usr/local/bin/
 local_pkgs_installed=(
     nwg-dock-hyprland
+    luac
+    hyprland-dialog
 )
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##

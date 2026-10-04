@@ -36,6 +36,7 @@ hypr_package=(
     kitty
     kvantum
     kvantum-qt5
+    lua
     qt5-qtdeclarative
     qt5-qtquickcontrols2
     qt6-qtdeclarative
