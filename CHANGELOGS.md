@@ -1,5 +1,11 @@
 ## CHANGELOGS
 
+## Oct 2026
+
+- Added:
+    - `lua` (provides `luac`) to default package dependencies
+    - `lua`, `hyprland-guiutils`, `luac`, and `hyprland-dialog` to final check script
+
 ## Sep 2026
 
 - Fixed:
