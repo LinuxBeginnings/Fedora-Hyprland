@@ -25,6 +25,7 @@
         - Removed a source directory named `ags` but cloned into `ags_v1.9.0`, so a second run always failed to clone
         - `npm install` and `meson setup build` failures are reported instead of ignored
         - Install status read `tee`'s exit code, and the `ags` binary was never verified afterwards
+        - The clone URL still pointed at the old `KoolDots` org, so git stopped at a `Username for 'https://github.com':` prompt; it now clones from `LinuxBeginnings` with `GIT_TERMINAL_PROMPT=0` so a bad URL fails instead of hanging
     - `uninstall.sh`
         - ESC did not cancel (only exit code 1 was handled, whiptail returns 255 for ESC)
         - Running it under `sudo` removed `/root/.config` instead of the user's configs

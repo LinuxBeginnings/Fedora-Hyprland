@@ -83,7 +83,10 @@ printf "\n%.0s" {1..1}
 printf "${INFO} Kindly Standby...cloning and compiling ${SKY_BLUE}Aylur's GTK shell $ags_tag${RESET}...\n"
 printf "\n%.0s" {1..1}
 
-if ! git clone --depth=1 https://github.com/KoolDots/ags_v1.9.0.git "$AGS_SRC_DIR" >> "$LOG" 2>&1; then
+# The KoolDots org was renamed to LinuxBeginnings; the old URL no longer exists,
+# which made git sit on a "Username for 'https://github.com'" prompt instead of
+# failing. GIT_TERMINAL_PROMPT=0 turns any future auth prompt into an error.
+if ! GIT_TERMINAL_PROMPT=0 git clone --depth=1 https://github.com/LinuxBeginnings/ags_v1.9.0.git "$AGS_SRC_DIR" >> "$LOG" 2>&1; then
     echo -e "\n${ERROR} Failed to download ${YELLOW}Aylur's GTK shell $ags_tag${RESET} Please check your connection\n" 2>&1 | tee -a "$LOG"
     exit 1
 fi
