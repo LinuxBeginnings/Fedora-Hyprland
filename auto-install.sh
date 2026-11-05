@@ -41,16 +41,35 @@ fi
 printf "\n%.0s" {1..1}
 
 if [ -d "$Distro_DIR" ]; then
+    # Only replace a checkout of this repo. Deleting an unknown directory here
+    # would take whatever else happens to live at that path with it.
+    if [ ! -d "$Distro_DIR/.git" ]; then
+        echo "${ERROR} $Distro_DIR exists but is not a git checkout of this repo."
+        echo "${NOTE} Move or remove that directory yourself, then re-run this script."
+        exit 1
+    fi
+
+    # Never silently discard local work
+    if [ -n "$(git -C "$Distro_DIR" status --porcelain 2>/dev/null)" ]; then
+        echo "${WARN} $Distro_DIR has local changes that a fresh clone would delete."
+        echo "${NOTE} Commit or stash them, or remove the directory yourself, then re-run."
+        exit 1
+    fi
+
     echo "${YELLOW}$Distro_DIR exists. Removing and performing a fresh clone... ${RESET}"
-    rm -rf "$Distro_DIR"
-    git clone --depth=1 "$Github_URL" "$Distro_DIR"
-    cd "$Distro_DIR"
-    chmod +x install.sh
-    ./install.sh
+    if ! rm -rf "$Distro_DIR"; then
+        echo "${ERROR} Could not remove $Distro_DIR. Check permissions and try again."
+        exit 1
+    fi
 else
     echo "${MAGENTA}$Distro_DIR does not exist. Cloning the repository...${RESET}"
-    git clone --depth=1 "$Github_URL" "$Distro_DIR"
-    cd "$Distro_DIR"
-    chmod +x install.sh
-    ./install.sh
 fi
+
+if ! git clone --depth=1 "$Github_URL" "$Distro_DIR"; then
+    echo "${ERROR} Failed to clone $Github_URL. Check your network and try again."
+    exit 1
+fi
+
+cd "$Distro_DIR" || { echo "${ERROR} Failed to change directory to $Distro_DIR"; exit 1; }
+chmod +x install.sh || { echo "${ERROR} Failed to make install.sh executable"; exit 1; }
+exec ./install.sh

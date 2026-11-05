@@ -140,7 +140,8 @@ for PKG in "${uninstall[@]}"; do
         continue
     fi
     uninstall_package "$PKG" 2>&1 | tee -a "$LOG"
-    if [ $? -ne 0 ]; then
+    # PIPESTATUS, not $? -- $? reports tee's exit status and is always 0
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
         overall_failed=1
     fi
 done
@@ -154,16 +155,38 @@ printf "\n%.0s" {1..1}
 # Installation of main components
 printf "\n%s - Installing ${SKY_BLUE}KooL's hyprland necessary packages${RESET} .... \n" "${NOTE}"
 
-for PKG1 in "${hypr_package[@]}" "${hypr_package_2[@]}" "${copr_packages[@]}" "${Extra[@]}"; do
+failed_critical=()
+failed_optional=()
+
+for PKG1 in "${hypr_package[@]}"; do
     if [ "$PKG1" = "rofi" ] && [ "$skip_rofi" = "true" ]; then
         continue
     fi
-    install_package "$PKG1" "$LOG"
+    if ! install_package "$PKG1"; then
+        failed_critical+=("$PKG1")
+    fi
 done
+
+# These are non-essential; a failure is reported but must not abort the install
+for PKG1 in "${hypr_package_2[@]}" "${copr_packages[@]}" "${Extra[@]}"; do
+    if ! install_package "$PKG1"; then
+        failed_optional+=("$PKG1")
+    fi
+done
+
+if [ ${#failed_optional[@]} -gt 0 ]; then
+    echo -e "${WARN} Optional package(s) failed to install: ${failed_optional[*]}" | tee -a "$LOG"
+fi
+
+if [ ${#failed_critical[@]} -gt 0 ]; then
+    echo -e "${ERROR} Essential package(s) failed to install: ${failed_critical[*]}" | tee -a "$LOG"
+    echo -e "${NOTE} See $LOG. Install them manually and re-run the installer." | tee -a "$LOG"
+    exit 1
+fi
 
 # Install nwg-dock-hyprland via dedicated installer script
 if [ -f "$SCRIPT_DIR/nwg-dock-hyprland.sh" ]; then
-    bash "$SCRIPT_DIR/nwg-dock-hyprland.sh"
+    bash "$SCRIPT_DIR/nwg-dock-hyprland.sh" || echo -e "${WARN} nwg-dock-hyprland installation failed. Check Install-Logs/." | tee -a "$LOG"
 fi
 
 printf "\n%.0s" {1..2}

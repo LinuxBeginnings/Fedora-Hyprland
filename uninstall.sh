@@ -34,8 +34,34 @@ echo -e "\e[35m
 \e[0m"
 printf "\n%.0s" {1..1}
 
+# Running as root would make $HOME=/root, so the removals below would hit the
+# wrong configs and leave the real user's files untouched
+if [[ $EUID -eq 0 ]]; then
+    echo "${ERROR}  This script should ${WARNING}NOT${RESET} be executed as root!! Exiting......."
+    exit 1
+fi
+
+if ! command -v whiptail >/dev/null 2>&1; then
+    echo "${ERROR} whiptail is required but not installed. Install it with: sudo dnf install -y newt"
+    exit 1
+fi
+
+# Selection files: use mktemp instead of predictable /tmp names
+PKG_SELECTION_FILE="$(mktemp)" || {
+    echo "${ERROR} Failed to create a temporary file."
+    exit 1
+}
+DIR_SELECTION_FILE="$(mktemp)" || {
+    echo "${ERROR} Failed to create a temporary file."
+    exit 1
+}
+cleanup_selection_files() {
+    rm -f "$PKG_SELECTION_FILE" "$DIR_SELECTION_FILE"
+}
+trap cleanup_selection_files EXIT
+
 # Welcome Message
-whiptail --title "Fedora-Hyprland KooL Dots Uninstall Script" --yesno \
+if ! whiptail --title "Fedora-Hyprland KooL Dots Uninstall Script" --yesno \
 "Hello! This script will uninstall KooL Hyprland packages and configs.
 
 You can choose packages and directories you want to remove.
@@ -43,9 +69,7 @@ NOTE: This will remove configs from ~/.config
 
 WARNING: After uninstallation, your system may become unstable.
 
-Shall we Proceed?" 20 80
-
-if [ $? -eq 1 ]; then
+Shall we Proceed?" 20 80; then
     echo "$INFO uninstall process canceled."
     exit 0
 fi
@@ -72,6 +96,18 @@ remove_packages() {
 remove_directories() {
     local selected_dirs_file=$1
     while read -r dir; do
+        # Only ever delete a name that was offered in the menu
+        local allowed_name=0
+        for valid_name in "${VALID_DIR_NAMES[@]}"; do
+            if [ "$dir" = "$valid_name" ]; then
+                allowed_name=1
+                break
+            fi
+        done
+        if [ "$allowed_name" -ne 1 ]; then
+            echo "$ERROR Refusing to remove unexpected directory name: '$dir'"
+            continue
+        fi
         pattern="$HOME/.config/$dir*"        
         # Loop through directories matching the pattern
         for dir_to_remove in $pattern; do
@@ -133,8 +169,8 @@ packages=(
     "qalculate-gtk" "calculator - QT" "off"
     "qt5ct" "qt5ct" "off"
     "qt6ct" "qt6ct" "off"
-    "quickshell" "quickshell" "off"
-    "rofi-wayland" "rofi-wayland" "off"
+    "quickshell" "quickshell desktop overview (required by the dots)" "off"
+    "rofi" "rofi launcher" "off"
     "slurp" "screenshot tool" "off"
     "swappy" "screenshot tool" "off"
     "SwayNotificationCenter" "notification agent" "off"
@@ -160,14 +196,13 @@ packages=(
 
 # Define the list of directories to choose from (with options_command tags)
 directories=(
-    "quickshell" "QUICKSHELL desktop overview configuration" "off"
     "btop" "btop configuration" "off"
     "cava" "cava configuration" "off"
     "fastfetch" "fastfetch configuration" "off"
     "hypr" "main hyprland configuration" "off"
     "kitty" "kitty terminal configuration" "off"
     "Kvantum" "Kvantum-manager configuration" "off"
-    "quickshell" "quickshell configuration" "off"
+    "quickshell" "quickshell (desktop overview) configuration" "off"
     "qt5ct" "qt5ct configuration" "off"
     "qt6ct" "qt6ct configuration" "off"
     "rofi" "rofi configuration" "off"
@@ -179,14 +214,18 @@ directories=(
     "wlogout" "wlogout (logout menu) configuration" "off"    
 )
 
+# Names the uninstaller is allowed to delete from ~/.config, taken from the menu
+VALID_DIR_NAMES=()
+for ((i = 0; i < ${#directories[@]}; i += 3)); do
+    VALID_DIR_NAMES+=("${directories[i]}")
+done
+
 # Loop for package selection until user selects something or cancels
 while true; do
-    package_choices=$(whiptail --title "Select Packages to Uninstall" --checklist \
-    "Select the packages you want to remove\nNOTE: 'SPACEBAR' to select & 'TAB' key to change selection" 35 90 25 \
-    "${packages[@]}" 3>&1 1>&2 2>&3)
-
-    # Check if the user canceled the operation
-    if [ $? -eq 1 ]; then
+    # Any non-zero exit (Cancel=1, ESC=255) means abort
+    if ! package_choices=$(whiptail --title "Select Packages to Uninstall" --checklist \
+        "Select the packages you want to remove\nNOTE: 'SPACEBAR' to select & 'TAB' key to change selection" 35 90 25 \
+        "${packages[@]}" 3>&1 1>&2 2>&3); then
         echo "$INFO uninstall process canceled."
         exit 0
     fi
@@ -195,7 +234,7 @@ while true; do
     if [[ -z "$package_choices" ]]; then
         echo "$NOTE No packages selected. Please select at least one package."
     else
-        echo "$package_choices" | tr -d '"' | tr ' ' '\n' > /tmp/selected_packages.txt
+        echo "$package_choices" | tr -d '"' | tr ' ' '\n' > "$PKG_SELECTION_FILE"
         echo "Packages to remove: $package_choices"
         break
     fi
@@ -203,12 +242,10 @@ done
 
 # Loop for directory selection until user selects something or cancels
 while true; do
-    dir_choices=$(whiptail --title "Select Directories to Remove" --checklist \
-    "Select the directories you want to remove\nNOTE: This will remove configs from ~/.config\n\nNOTE: 'SPACEBAR' to select & 'TAB' key to change selection" 28 90 18 \
-    "${directories[@]}" 3>&1 1>&2 2>&3)
-
-    # Check if the user canceled the operation
-    if [ $? -eq 1 ]; then
+    # Any non-zero exit (Cancel=1, ESC=255) means abort
+    if ! dir_choices=$(whiptail --title "Select Directories to Remove" --checklist \
+        "Select the directories you want to remove\nNOTE: This will remove configs from ~/.config\n\nNOTE: 'SPACEBAR' to select & 'TAB' key to change selection" 28 90 18 \
+        "${directories[@]}" 3>&1 1>&2 2>&3); then
         echo "$INFO uninstall process canceled."
         exit 0
     fi
@@ -218,7 +255,7 @@ while true; do
         echo "$NOTE No directories selected. Please select at least one directory."
     else
         # Save each selected directory to a new line in the temporary file
-        echo "$dir_choices" | tr -d '"' | tr ' ' '\n' > /tmp/selected_directories.txt
+        echo "$dir_choices" | tr -d '"' | tr ' ' '\n' > "$DIR_SELECTION_FILE"
         echo "Directories to remove: $dir_choices"
         break
     fi
@@ -247,7 +284,7 @@ ATTEMPT=0
 
 while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
     # Remove packages
-    remove_packages /tmp/selected_packages.txt
+    remove_packages "$PKG_SELECTION_FILE"
 
     # Check if any packages still need to be removed, retry if needed
     MISSING_PACKAGE_COUNT=0
@@ -255,7 +292,7 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
         if dnf list installed "$package" &> /dev/null; then
             MISSING_PACKAGE_COUNT=$((MISSING_PACKAGE_COUNT + 1))
         fi
-    done < /tmp/selected_packages.txt
+    done < "$PKG_SELECTION_FILE"
 
     if [ $MISSING_PACKAGE_COUNT -gt 0 ]; then
         ATTEMPT=$((ATTEMPT + 1))
@@ -267,16 +304,42 @@ done
 
 printf "\n%.0s" {1..1}
 printf "\n%s${SKY_BLUE}Attempting to remove locally installed packages${RESET}\n" "${NOTE}"
-for file in ags; do
-    if [ -f "/usr/local/bin/$file" ]; then
-        sudo rm "/usr/local/bin/$file"
-        echo "$file removed."
+
+# Binaries installed outside dnf (ags, and nwg-dock-hyprland built from source)
+for file in ags nwg-dock-hyprland; do
+    for bindir in /usr/local/bin /usr/bin; do
+        if [ -f "$bindir/$file" ]; then
+            sudo rm -f "$bindir/$file" && echo "$bindir/$file removed."
+        fi
+    done
+done
+
+# Data/assets installed by the nwg-dock-hyprland source build
+for sharedir in /usr/local/share/nwg-dock-hyprland /usr/share/nwg-dock-hyprland; do
+    if [ -d "$sharedir" ]; then
+        sudo rm -rf "$sharedir" && echo "$sharedir removed."
     fi
 done
 
+# User services created by the optional monitor installers
+printf "\n%.0s" {1..1}
+printf "\n%s${SKY_BLUE}Disabling and removing leftover user services${RESET}\n" "${NOTE}"
+for unit in battery-monitor.service disk-monitor.service temp-monitor.service; do
+    unit_file="$HOME/.config/systemd/user/$unit"
+    if systemctl --user is-enabled --quiet "$unit" 2>/dev/null; then
+        systemctl --user disable --now "$unit" >/dev/null 2>&1 || true
+    elif systemctl --user is-active --quiet "$unit" 2>/dev/null; then
+        systemctl --user stop "$unit" >/dev/null 2>&1 || true
+    fi
+    if [ -f "$unit_file" ]; then
+        rm -f "$unit_file" && echo "$unit removed."
+    fi
+done
+systemctl --user daemon-reload >/dev/null 2>&1 || true
+
 printf "\n%.0s" {1..1}
 printf "\n%s${SKY_BLUE}Attempting to remove selected directories${RESET}\n" "${NOTE}"
-remove_directories /tmp/selected_directories.txt
+remove_directories "$DIR_SELECTION_FILE"
 
 # Remove COPR repositories
 printf "\n%.0s" {1..1}

@@ -7,6 +7,17 @@
 # ==================================================
 # https://github.com/KoolDots
 
+# Always operate from the directory this script lives in so relative paths
+# (install-scripts/, Install-Logs/, assets/) resolve no matter the caller's cwd
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || {
+    echo "Failed to resolve the script directory."
+    exit 1
+}
+cd "$SCRIPT_DIR" || {
+    echo "Failed to change directory to $SCRIPT_DIR"
+    exit 1
+}
+
 # Set some colors for output messages
 OK="$(tput setaf 2)[OK]$(tput sgr0)"
 ERROR="$(tput setaf 1)[ERROR]$(tput sgr0)"
@@ -49,6 +60,14 @@ fi
 if [ ! -d Install-Logs ]; then
     mkdir Install-Logs
 fi
+
+# Keep the log directory from growing without bound
+find Install-Logs -maxdepth 1 -type f -name '*.log' -mtime +14 -delete 2>/dev/null || true
+
+# Restore the cursor if the user interrupts a spinner mid-install
+restore_terminal() { tput cnorm 2>/dev/null || true; }
+trap restore_terminal EXIT
+trap 'restore_terminal; echo; echo "Installation interrupted."; exit 130' INT TERM
 
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/01-Hyprland-Install-Scripts-$(date +%d-%H%M%S).log"
@@ -147,6 +166,7 @@ rog="OFF"
 dots="OFF"
 input_group="OFF"
 nvidia="OFF"
+ags="OFF"
 
 # Function to load preset file
 load_preset() {
@@ -162,6 +182,22 @@ load_preset() {
 if [[ "$1" == "--preset" && -n "$2" ]]; then
     load_preset "$2"
 fi
+
+# Normalize every preset value to ON/OFF so a typo or lowercase value cannot
+# break the whiptail checklist state
+normalize_onoff() {
+    local value="${1:-OFF}"
+    value="$(printf '%s' "$value" | tr '[:lower:]' '[:upper:]')"
+    if [[ "$value" == "ON" ]]; then
+        printf 'ON'
+    else
+        printf 'OFF'
+    fi
+}
+
+for option_var in gtk_themes bluetooth thunar sddm sddm_theme zsh pokemon rog dots input_group nvidia ags; do
+    printf -v "$option_var" '%s' "$(normalize_onoff "${!option_var}")"
+done
 
 # List of services to check for active login managers
 services=("gdm.service" "gdm3.service" "lightdm.service" "lxdm.service")
@@ -205,7 +241,7 @@ options_command=(
 # Add NVIDIA options if detected
 if [ "$nvidia_detected" == "true" ]; then
     options_command+=(
-        "nvidia" "Do you want script to configure NVIDIA GPU?" "OFF"
+        "nvidia" "Do you want script to configure NVIDIA GPU?" "$nvidia"
     )
 fi
 
@@ -219,27 +255,28 @@ fi
 # Add 'input_group' option if necessary
 if [ "$input_group_detected" == "true" ]; then
     options_command+=(
-        "input_group" "Add your USER to input group for some waybar functionality?" "OFF"
+        "input_group" "Add your USER to input group for some waybar functionality?" "$input_group"
     )
 fi
 
 # Conditionally add SDDM and SDDM theme options if no active login manager is found
 if ! check_services_running; then
     options_command+=(
-        "sddm" "Install & configure SDDM login manager?" "OFF"
-        "sddm_theme" "Download & Install Additional SDDM theme?" "OFF"
+        "sddm" "Install & configure SDDM login manager?" "$sddm"
+        "sddm_theme" "Download & Install Additional SDDM theme?" "$sddm_theme"
     )
 fi
 
 # Add the remaining static options
 options_command+=(
-    "gtk_themes" "Install GTK themes (required for Dark/Light function)" "OFF"
-    "bluetooth" "Do you want script to configure Bluetooth?" "OFF"
-    "thunar" "Do you want Thunar file manager to be installed?" "OFF"
-    "zsh" "Install zsh shell with Oh-My-Zsh?" "OFF"
-    "pokemon" "Add Pokemon color scripts to your terminal?" "OFF"
-    "rog" "Are you installing on Asus ROG laptops?" "OFF"
-    "dots" "Download and install pre-configured KooL Hyprland dotfiles?" "OFF"
+    "gtk_themes" "Install GTK themes (required for Dark/Light function)" "$gtk_themes"
+    "bluetooth" "Do you want script to configure Bluetooth?" "$bluetooth"
+    "thunar" "Do you want Thunar file manager to be installed?" "$thunar"
+    "zsh" "Install zsh shell with Oh-My-Zsh?" "$zsh"
+    "pokemon" "Add Pokemon color scripts to your terminal?" "$pokemon"
+    "rog" "Are you installing on Asus ROG laptops?" "$rog"
+    "ags" "Install AGS (Aylur's GTK Shell) v1 as an alternate overview?" "$ags"
+    "dots" "Download and install pre-configured KooL Hyprland dotfiles?" "$dots"
 )
 
 # Capture the selected options before the while loop starts
@@ -360,7 +397,7 @@ for option in "${options[@]}"; do
         if check_services_running; then
             active_list=$(printf "%s\n" "${active_services[@]}")
             whiptail --title "Error" --msgbox "One of the following login services is running:\n$active_list\n\nPlease stop & disable it or DO not choose SDDM." 12 60
-            exec "$0"
+            echo "${WARN} Skipping SDDM setup: an active login manager was detected. Stop and disable it, reboot, then re-run the installer." | tee -a "$LOG"
         else
             echo "${INFO} Installing and configuring ${SKY_BLUE}SDDM...${RESET}" | tee -a "$LOG"
             execute_script "sddm.sh"
@@ -403,6 +440,10 @@ for option in "${options[@]}"; do
         echo "${INFO} Installing ${SKY_BLUE}ROG laptop packages...${RESET}" | tee -a "$LOG"
         execute_script "rog.sh"
         ;;
+    ags)
+        echo "${INFO} Installing ${SKY_BLUE}AGS (Aylur's GTK Shell)${RESET} v1 for desktop overview..." | tee -a "$LOG"
+        execute_script "ags.sh" || echo "${WARN} AGS installation failed - quickshell remains the default overview. Check Install-Logs/." | tee -a "$LOG"
+        ;;
     dots)
         echo "${INFO} Installing pre-configured ${SKY_BLUE}KooL Hyprland dotfiles...${RESET}" | tee -a "$LOG"
         execute_script "dotfiles-main.sh" || {
@@ -430,7 +471,8 @@ done
 clear
 
 # final check essential packages if it is installed
-execute_script "02-Final-Check.sh"
+final_check_ok=1
+execute_script "02-Final-Check.sh" || final_check_ok=0
 
 printf "\n%.0s" {1..1}
 
@@ -449,7 +491,10 @@ if rpm -q hyprland &>/dev/null || rpm -q hyprland-git &>/dev/null; then
 
     while true; do
         echo -n "${CAT} Would you like to reboot now? (y/n): "
-        read HYP
+        if ! read -r HYP; then
+            printf "\n${WARN} No input (stdin closed). Skipping the reboot prompt.\n"
+            break
+        fi
         HYP=$(echo "$HYP" | tr '[:upper:]' '[:lower:]')
 
         if [[ "$HYP" == "y" || "$HYP" == "yes" ]]; then
@@ -469,6 +514,11 @@ if rpm -q hyprland &>/dev/null || rpm -q hyprland-git &>/dev/null; then
             echo "${WARN} Invalid response. Please answer with 'y' or 'n'."
         fi
     done
+
+    if [ "${final_check_ok:-1}" -ne 1 ]; then
+        printf "\n${ERROR} The final check found missing essential packages. Fix them, then re-run ${SKY_BLUE}./install-scripts/02-Final-Check.sh${RESET}.\n"
+        exit 1
+    fi
 else
     # Print error message if neither package is installed
     printf "\n${WARN} Hyprland is NOT installed. Please check 00_CHECK-time_installed.log and other files in the Install-Logs/ directory..."

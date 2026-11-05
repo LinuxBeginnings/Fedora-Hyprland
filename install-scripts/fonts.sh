@@ -39,9 +39,13 @@ LOG="Install-Logs/install-$(date +%d-%H%M%S)_fonts.log"
 # Installation of main components
 printf "\n%s - Installing necessary ${SKY_BLUE}fonts${RESET}.... \n" "${NOTE}"
 
+font_failures=()
 for PKG1 in "${fonts[@]}"; do
-  install_package "$PKG1" "$LOG"
+  install_package "$PKG1" || font_failures+=("$PKG1")
 done
+if [ ${#font_failures[@]} -gt 0 ]; then
+  echo "${WARN} Font package(s) failed to install: ${font_failures[*]}" | tee -a "$LOG"
+fi
 
 printf "\n%.0s" {1..2}
 
@@ -49,8 +53,15 @@ printf "\n%.0s" {1..2}
 DOWNLOAD_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
 # Maximum number of download attempts
 MAX_ATTEMPTS=2
+nerd_downloaded=0
+nerd_font_ok=0
 for ((ATTEMPT = 1; ATTEMPT <= MAX_ATTEMPTS; ATTEMPT++)); do
-    curl -OL "$DOWNLOAD_URL" 2>&1 | tee -a "$LOG" && break
+    # NOTE: no pipe to tee here. A pipeline reports the status of its last command,
+    # so `curl ... | tee` would look successful even when curl failed.
+    if curl -fL -o JetBrainsMono.tar.xz "$DOWNLOAD_URL" >> "$LOG" 2>&1; then
+        nerd_downloaded=1
+        break
+    fi
     echo "Download ${YELLOW}DOWNLOAD_URL${RESET} attempt $ATTEMPT failed. Retrying in 2 seconds..." 2>&1 | tee -a "$LOG"
     sleep 2
 done
@@ -60,20 +71,31 @@ if [ -d ~/.local/share/fonts/JetBrainsMonoNerd ]; then
     rm -rf ~/.local/share/fonts/JetBrainsMonoNerd 2>&1 | tee -a "$LOG"
 fi
 
-mkdir -p ~/.local/share/fonts/JetBrainsMonoNerd 2>&1 | tee -a "$LOG"
+mkdir -p ~/.local/share/fonts/JetBrainsMonoNerd
 # Extract the new files into the JetBrainsMono directory and log the output
-tar -xJkf JetBrainsMono.tar.xz -C ~/.local/share/fonts/JetBrainsMonoNerd 2>&1 | tee -a "$LOG"
+if [ "$nerd_downloaded" -eq 1 ] && tar -xJkf JetBrainsMono.tar.xz -C ~/.local/share/fonts/JetBrainsMonoNerd >> "$LOG" 2>&1; then
+    nerd_font_ok=1
+else
+    echo -e "\n${ERROR} ${YELLOW}JetBrainsMono Nerd Font${RESET} could not be installed. waybar icons may not render.\n" | tee -a "$LOG"
+fi
 
 # clean up 
-if [ -d "JetBrainsMono.tar.xz" ]; then
-	rm -r JetBrainsMono.tar.xz 2>&1 | tee -a "$LOG"
+if [ -f "JetBrainsMono.tar.xz" ]; then
+	rm -f JetBrainsMono.tar.xz 2>&1 | tee -a "$LOG"
 fi
 
 # Fantasque Mono Nerd Font
-if wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FantasqueSansMono.zip; then
-    mkdir -p "$HOME/.local/share/fonts/FantasqueSansMonoNerd" && unzip -o -q "FantasqueSansMono.zip" -d "$HOME/.local/share/fonts/FantasqueSansMono" && echo "FantasqueSansMono installed successfully" | tee -a "$LOG"
+# Extract into the directory that is actually created: the old line made
+# .../FantasqueSansMonoNerd but unzipped into .../FantasqueSansMono
+FANTASQUE_DIR="$HOME/.local/share/fonts/FantasqueSansMonoNerd"
+if wget -q -O FantasqueSansMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FantasqueSansMono.zip \
+   && mkdir -p "$FANTASQUE_DIR" \
+   && unzip -o -q FantasqueSansMono.zip -d "$FANTASQUE_DIR" >> "$LOG" 2>&1; then
+    rm -f FantasqueSansMono.zip
+    echo "${OK} FantasqueSansMono installed to $FANTASQUE_DIR" | tee -a "$LOG"
 else
-    echo -e "\n${ERROR} Failed to download ${YELLOW}Fantasque Sans Mono Nerd Font${RESET} Please check your connection\n" | tee -a "$LOG"
+    rm -f FantasqueSansMono.zip
+    echo -e "\n${ERROR} Failed to install ${YELLOW}Fantasque Sans Mono Nerd Font${RESET} Please check your connection\n" | tee -a "$LOG"
 fi
 
 # Victor Mono-Font
@@ -85,5 +107,10 @@ fi
 
 # Update font cache and log the output
 fc-cache -v 2>&1 | tee -a "$LOG"
+
+if [ "$nerd_font_ok" -ne 1 ]; then
+    echo -e "${ERROR} The JetBrains Nerd Font is required by waybar. Install it manually, then re-run the installer." | tee -a "$LOG"
+    exit 1
+fi
 
 printf "\n%.0s" {1..2}

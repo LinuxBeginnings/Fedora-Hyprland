@@ -9,7 +9,7 @@
 # Define the options you want to preselect (either ON or OFF)
 # IMPORTANT: answer should be inside ""
 
-### Script will install nvidia-dkms nvidia-utils & nvidia-settings
+### Script will install akmod-nvidia nvidia-cuda & nvidia libva
 ###-Would you like script to Configure NVIDIA for you?
 nvidia="OFF"
 
@@ -25,9 +25,9 @@ thunar="ON"
 ### Adding user to the 'input' group might be necessary for waybar keyboard-state functionality
 input_group="ON"
 
-### Desktop overview Demo Link in README
-### Desktop overview Demo Link in README
-### Install AGS (aylur's GTK shell) v1 for Desktop-Like Overview?" 
+### Desktop overview. AGS is the fallback when quickshell is unavailable,
+### and some prefer its overview over the quickshell one
+###-Install AGS (Aylur's GTK Shell) v1 for Desktop-Like Overview?
 ags="ON"
 
 ###-Install & configure SDDM log-in Manager
@@ -38,7 +38,7 @@ sddm_theme="ON"
 ### Shell extension. Bash alternative
 ###-Install zsh, oh-my-zsh
 zsh="ON"
-### add Pokemon color scripts to terminal 
+### add Pokemon color scripts to terminal
 pokemon="ON"
 
 ### This will install ASUSCTL & SUPERGFXCTL

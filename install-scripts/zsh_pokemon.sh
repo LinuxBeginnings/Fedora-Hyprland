@@ -26,11 +26,28 @@ LOG="Install-Logs/install-$(date +%d-%H%M%S)_zsh_pokemon.log"
 
 printf "${INFO} Installing ${SKY_BLUE}Pokemon color scripts${RESET} ..."
 
-if [ -d "pokemon-colorscripts" ]; then
-    cd pokemon-colorscripts && git pull && sudo ./install.sh && cd ..
-    else
-    git clone --depth=1 https://gitlab.com/phoneybadger/pokemon-colorscripts.git &&
-    cd pokemon-colorscripts && sudo ./install.sh && cd ..
+# Clone into the user's data dir, not the repo root (it used to leave an
+# untracked pokemon-colorscripts/ directory inside the installer checkout)
+POKEMON_DIR="$HOME/.local/share/pokemon-colorscripts"
+
+if [ -d "$POKEMON_DIR/.git" ]; then
+    if ! git -C "$POKEMON_DIR" pull --ff-only >> "$LOG" 2>&1; then
+        echo "${WARN} Could not update pokemon-colorscripts, using the existing copy." | tee -a "$LOG"
+    fi
+else
+    mkdir -p "$(dirname "$POKEMON_DIR")"
+    rm -rf "$POKEMON_DIR"
+    if ! git clone --depth=1 https://gitlab.com/phoneybadger/pokemon-colorscripts.git "$POKEMON_DIR" >> "$LOG" 2>&1; then
+        echo "${ERROR} Failed to download pokemon-colorscripts. Please check your connection." | tee -a "$LOG"
+    fi
+fi
+
+if [ -f "$POKEMON_DIR/install.sh" ]; then
+    if ! ( cd "$POKEMON_DIR" && sudo ./install.sh ) >> "$LOG" 2>&1; then
+        echo "${ERROR} pokemon-colorscripts installer failed. See $LOG" | tee -a "$LOG"
+    fi
+else
+    echo "${ERROR} pokemon-colorscripts is missing, skipping its installer." | tee -a "$LOG"
 fi
 
 # Check if ~/.zshrc exists

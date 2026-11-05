@@ -46,7 +46,7 @@ fi
 
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/install-$(date +%d-%H%M%S)_ags.log"
-MLOG="install-$(date +%d-%H%M%S)_ags2.log"
+MLOG="Install-Logs/install-$(date +%d-%H%M%S)_ags2.log"
 
 # Check if AGS is installed
 if command -v ags &>/dev/null; then
@@ -71,32 +71,49 @@ printf "\n%.0s" {1..1}
 # ags v1
 printf "${NOTE} Install and Compiling ${SKY_BLUE}Aylur's GTK shell $ags_tag${RESET}..\n"
 
-# Check if directory exists and remove it
-if [ -d "ags" ]; then
-    printf "${NOTE} Removing existing ags directory...\n"
-    rm -rf "ags"
+AGS_SRC_DIR="ags_v1.9.0"
+# The old check removed a directory named "ags", but the clone lands in
+# "ags_v1.9.0", so a second run failed with "destination path already exists"
+if [ -d "$AGS_SRC_DIR" ]; then
+    printf "${NOTE} Removing existing %s directory...\n" "$AGS_SRC_DIR"
+    rm -rf "$AGS_SRC_DIR"
 fi
 
 printf "\n%.0s" {1..1}
 printf "${INFO} Kindly Standby...cloning and compiling ${SKY_BLUE}Aylur's GTK shell $ags_tag${RESET}...\n"
 printf "\n%.0s" {1..1}
-# Clone repository with the specified tag and capture git output into MLOG
-if git clone --depth=1 https://github.com/KoolDots/ags_v1.9.0.git; then
-    cd ags_v1.9.0 || exit 1
-    npm install
-    meson setup build
-   if sudo meson install -C build 2>&1 | tee -a "$MLOG"; then
-    printf "\n${OK} ${YELLOW}Aylur's GTK shell $ags_tag${RESET} installed successfully.\n" 2>&1 | tee -a "$MLOG"
-  else
-    echo -e "\n${ERROR} ${YELLOW}Aylur's GTK shell $ags_tag${RESET} Installation failed\n " 2>&1 | tee -a "$MLOG"
-   fi
-    # Move logs to Install-Logs directory
-    mv "$MLOG" ../Install-Logs/ || true
-    cd ..
-else
+
+if ! git clone --depth=1 https://github.com/KoolDots/ags_v1.9.0.git "$AGS_SRC_DIR" >> "$LOG" 2>&1; then
     echo -e "\n${ERROR} Failed to download ${YELLOW}Aylur's GTK shell $ags_tag${RESET} Please check your connection\n" 2>&1 | tee -a "$LOG"
-    mv "$MLOG" ../Install-Logs/ || true
     exit 1
 fi
 
+cd "$AGS_SRC_DIR" || { echo "${ERROR} Failed to enter $AGS_SRC_DIR"; exit 1; }
+
+if ! npm install >> "$MLOG" 2>&1; then
+    echo -e "\n${ERROR} npm install failed for ${YELLOW}AGS${RESET}. See $MLOG\n" 2>&1 | tee -a "$LOG"
+    cd "$PARENT_DIR" || true
+    exit 1
+fi
+
+if ! meson setup build >> "$MLOG" 2>&1; then
+    echo -e "\n${ERROR} meson setup failed for ${YELLOW}AGS${RESET}. See $MLOG\n" 2>&1 | tee -a "$LOG"
+    cd "$PARENT_DIR" || true
+    exit 1
+fi
+
+# PIPESTATUS[0], not the pipeline status: `meson install | tee` reports tee's
+# exit code, so a failed install looked successful
+sudo meson install -C build 2>&1 | tee -a "$MLOG"
+INSTALL_STATUS=${PIPESTATUS[0]}
+
+cd "$PARENT_DIR" || true
+
+# The old script never verified the binary, so a broken build reported success
+if [ "$INSTALL_STATUS" -ne 0 ] || ! command -v ags >/dev/null 2>&1; then
+    echo -e "\n${ERROR} ${YELLOW}Aylur's GTK shell $ags_tag${RESET} installation failed. See $MLOG\n " 2>&1 | tee -a "$LOG"
+    exit 1
+fi
+
+printf "\n${OK} ${YELLOW}Aylur's GTK shell $ags_tag${RESET} installed successfully.\n" 2>&1 | tee -a "$MLOG"
 printf "\n%.0s" {1..2}

@@ -51,7 +51,9 @@ printf "\n%.0s" {1..1}
 if command -v zsh >/dev/null; then
   printf "${NOTE} Installing ${SKY_BLUE}Oh My Zsh and plugins${RESET} ...\n"
   if [ ! -d "$HOME/.oh-my-zsh" ]; then  
-    sh -c "$(curl -fsSL https://install.ohmyz.sh)" "" --unattended  	       
+    if ! sh -c "$(curl -fsSL https://install.ohmyz.sh)" "" --unattended; then
+      echo "${ERROR} Oh My Zsh installation failed. Check $LOG and re-run." | tee -a "$LOG"
+    fi  	       
   else
     echo "${INFO} Directory .oh-my-zsh already exists. Skipping re-installation." 2>&1 | tee -a "$LOG"
   fi
@@ -88,13 +90,23 @@ if command -v zsh >/dev/null; then
     printf "${NOTE} Changing default shell to ${MAGENTA}zsh${RESET}..."
     printf "\n%.0s" {1..2}
 
-    # Loop to ensure the chsh command succeeds
-    while ! chsh -s "$(command -v zsh)"; do
-      echo "${ERROR} Authentication failed. Please enter the correct password." 2>&1 | tee -a "$LOG"
-      sleep 1
+    # Try a few times, then give up: an unbounded loop here traps the user
+    # until they get the password right, with no way to skip.
+    CHSH_OK=0
+    for attempt in 1 2 3; do
+      if chsh -s "$(command -v zsh)"; then
+        CHSH_OK=1
+        break
+      fi
+      echo "${ERROR} chsh failed (attempt ${attempt}/3). Please enter the correct password." 2>&1 | tee -a "$LOG"
+      [ "$attempt" -lt 3 ] && sleep 1
     done
 
-    printf "${INFO} Shell changed successfully to ${MAGENTA}zsh${RESET}" 2>&1 | tee -a "$LOG"
+    if [ "$CHSH_OK" -eq 1 ]; then
+      printf "${INFO} Shell changed successfully to ${MAGENTA}zsh${RESET}" 2>&1 | tee -a "$LOG"
+    else
+      echo "${WARN} Could not change your default shell. Run manually: chsh -s $(command -v zsh)" 2>&1 | tee -a "$LOG"
+    fi
   else
     echo "${NOTE} Your shell is already set to ${MAGENTA}zsh${RESET}."
   fi

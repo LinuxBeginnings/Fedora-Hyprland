@@ -1,5 +1,51 @@
 ## CHANGELOGS
 
+## Nov 2026
+
+- Fixed:
+    - `./install.sh --preset preset.sh` was ignored
+        - The checklist used hardcoded `OFF` values instead of the preset variables
+        - Preset values are now normalized to `ON`/`OFF`, so a lowercase or mistyped value cannot break the menu
+        - Choosing SDDM with another login manager running re-ran the whole installer (`exec "$0"`), now it warns and skips
+    - Failed installs reported as successes
+        - `install_package` returns non-zero when the package did not land
+        - `show_progress` shows the real exit code instead of "Done!" every time
+        - Package removal status in `00-hypr-pkgs.sh` read `tee`'s exit code instead of the package manager's (`PIPESTATUS`)
+        - `fonts.sh` nerd font retry loop always passed, so a failed download never retried
+        - `nwg-dock-hyprland` used `go build | tee`, so a failed compile looked successful and the `Makefile` fallback was skipped
+        - Failed `git clone`/`git pull`/`copy.sh` in `dotfiles-main.sh` and failed COPR/RPM Fusion setup in `copr.sh` are now reported
+    - sudo password prompt hidden behind the install spinner
+        - Asked once up front, and the sudo timestamp is kept alive during long installs
+    - `zsh.sh` `chsh` loop retried forever on a wrong password (now 3 attempts, then instructions)
+    - Fantasque Mono font unzipped into `FantasqueSansMono` while the installer created `FantasqueSansMonoNerd`
+    - `auto-install.sh` deleted `~/Fedora-Hyprland` without checking what was there
+        - Only replaces a git checkout of this repo, and refuses when it has local changes
+        - `git clone`, `cd` and `chmod` failures are reported instead of ignored
+    - `ags.sh`
+        - Removed a source directory named `ags` but cloned into `ags_v1.9.0`, so a second run always failed to clone
+        - `npm install` and `meson setup build` failures are reported instead of ignored
+        - Install status read `tee`'s exit code, and the `ags` binary was never verified afterwards
+    - `uninstall.sh`
+        - ESC did not cancel (only exit code 1 was handled, whiptail returns 255 for ESC)
+        - Running it under `sudo` removed `/root/.config` instead of the user's configs
+        - Missing `whiptail` caused an endless "No packages selected" loop
+        - `rofi-wayland` package name corrected to `rofi`
+        - Deleted `~/.config/<name>*` for whatever name was in the selection file; only names offered in the menu are accepted now
+        - Duplicate `quickshell` entry in the directory menu
+    - `install.sh` reboot prompt looped forever when stdin was closed (EOF)
+    - `02-Final-Check.sh` always exited 0, so missing essentials were never reported to the installer
+- Added:
+    - AGS (Aylur's GTK Shell) back as an install option and in `preset.sh`
+        - Still the fallback overview when quickshell is unavailable, and some prefer it to the quickshell overview
+    - `quickshell` to the essential package check (it is a dependency, not an optional app)
+    - `cd` guard in `install.sh` so relative paths resolve no matter where it is started from
+    - Interrupt trap (cursor restore) and 14-day log pruning in `install.sh`
+    - `uninstall.sh` cleanup for `ags` and `nwg-dock-hyprland` binaries, their share files, and the battery/disk/temp monitor user services
+    - `mktemp` for the uninstall selection lists instead of predictable `/tmp` filenames
+    - `hypr-tags.env` so the `nwg-dock-hyprland` version pin is discoverable
+    - `install_package` now honours the log file passed by its callers
+    - pokemon-colorscripts installs to `~/.local/share` instead of the repo root
+
 ## Oct 2026
 
 - Added:

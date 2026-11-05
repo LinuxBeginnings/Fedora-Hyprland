@@ -23,20 +23,38 @@ fi
 
 
 printf "${NOTE} Cloning and Installing ${SKY_BLUE}KooL's Hyprland Dots${RESET}....\n"
+install_failed=0
+
 # Check if Hyprland-Dots exists
 if [ -d Hyprland-Dots ]; then
-  cd Hyprland-Dots
-  git stash && git pull
+  cd Hyprland-Dots || { echo -e "${ERROR} Cannot enter Hyprland-Dots"; exit 1; }
+  git stash >/dev/null 2>&1 || true
+  if ! git pull; then
+    echo -e "${WARN} Could not update Hyprland-Dots. Using the existing copy." | tee -a "$LOG"
+  fi
   chmod +x copy.sh
-  ./copy.sh 
+  if ! ./copy.sh; then
+    echo -e "${ERROR} copy.sh failed. Dotfiles were not installed correctly." | tee -a "$LOG"
+    install_failed=1
+  fi
+  cd ..
 else
   if git clone --depth=1 https://github.com/LinuxBeginnings/Hyprland-Dots; then
-    cd Hyprland-Dots || exit 1
+    cd Hyprland-Dots || { echo -e "${ERROR} Cannot enter Hyprland-Dots"; exit 1; }
     chmod +x copy.sh
-    ./copy.sh 
+    if ! ./copy.sh; then
+      echo -e "${ERROR} copy.sh failed. Dotfiles were not installed correctly." | tee -a "$LOG"
+      install_failed=1
+    fi
+    cd ..
   else
-    echo -e "$ERROR Can't download ${YELLOW}KooL's Hyprland-Dots${RESET} . Check your internet connection"
+    echo -e "$ERROR Can't download ${YELLOW}KooL's Hyprland Dots${RESET} . Check your internet connection" | tee -a "$LOG"
+    install_failed=1
   fi
+fi
+
+if [ "$install_failed" -ne 0 ]; then
+  exit 1
 fi
 
 printf "\n%.0s" {1..2}

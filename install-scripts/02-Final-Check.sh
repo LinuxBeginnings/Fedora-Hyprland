@@ -30,6 +30,7 @@ packages=(
     hyprland
     hyprland-guiutils
     lua
+    quickshell
     yazi
 )
 
@@ -147,4 +148,9 @@ else
 
     # Add a timestamp when the missing packages were logged
     echo "${NOTE} Missing packages logged at $(date)" >>"$LOG"
+fi
+
+# Non-zero exit so the caller knows the install is incomplete
+if [ ${#missing[@]} -ne 0 ] || [ ${#local_missing[@]} -ne 0 ]; then
+    exit 1
 fi

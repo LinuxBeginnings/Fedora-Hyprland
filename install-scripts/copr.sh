@@ -70,15 +70,22 @@ add_config_if_not_present "/etc/dnf/dnf.conf" "fastestmirror=True"
 add_config_if_not_present "/etc/dnf/dnf.conf" "defaultyes=True"
 
 # Enable RPM Fusion repositories
-sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm &&
+printf "%s - Enabling ${SKY_BLUE}RPM Fusion${RESET} repositories...\n" "${NOTE}"
+if ! sudo dnf install -y \
+    "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
+    "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" >> "$LOG" 2>&1; then
+    printf "%s - Failed to enable RPM Fusion repositories. See %s\n" "${ERROR}" "$LOG"
+    exit 1
+fi
 
-    # Enable COPR Repositories
-    for repo in "${COPR_REPOS[@]}"; do
-        sudo dnf copr enable -y "$repo" 2>&1 | tee -a "$LOG" || {
-            printf "%s - Failed to enable necessary copr repos\n" "${ERROR}"
-            exit 1
-        }
-    done
+# Enable COPR Repositories
+for repo in "${COPR_REPOS[@]}"; do
+    printf "%s - Enabling ${SKY_BLUE}%s${RESET}...\n" "${NOTE}" "$repo"
+    if ! sudo dnf copr enable -y "$repo" >> "$LOG" 2>&1; then
+        printf "%s - Failed to enable necessary copr repo: %s (see %s)\n" "${ERROR}" "$repo" "$LOG"
+        exit 1
+    fi
+done
 
 printf "\n%.0s" {1..1}
 
@@ -114,6 +121,8 @@ done
 printf "\n%.0s" {1..1}
 
 # Update package cache and install packages
-sudo dnf update -y
+if ! sudo dnf update -y >> "$LOG" 2>&1; then
+    printf "%s - dnf update failed. See %s\n" "${WARN}" "$LOG"
+fi
 
 printf "\n%.0s" {1..2}

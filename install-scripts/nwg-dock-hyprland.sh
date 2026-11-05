@@ -18,7 +18,10 @@ TAG_SRC="${NWG_DOCK_HYPRLAND_TAG:-$tag_default}"
 [[ "$TAG_SRC" =~ ^(auto|latest)$ ]] && git_ref="" || git_ref="$TAG_SRC"
 
 DO_INSTALL=1
-[ "$1" = "--dry-run" ] || [ "${DRY_RUN}" = "1" ] || [ "${DRY_RUN}" = "true" ] && { DO_INSTALL=0; echo "${NOTE} DRY RUN: install step will be skipped."; }
+if [ "$1" = "--dry-run" ] || [ "${DRY_RUN}" = "1" ] || [ "${DRY_RUN}" = "true" ]; then
+  DO_INSTALL=0
+  echo "${NOTE} DRY RUN: install step will be skipped."
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$SCRIPT_DIR/.."
@@ -89,10 +92,17 @@ if git clone --recursive ${git_ref:+-b "$git_ref"} https://github.com/nwg-piotr/
     BUILD_SUCCESS=0
     rm -f nwg-dock-hyprland bin/nwg-dock-hyprland 2>/dev/null || true
 
-    if "$GO_BIN" build -v -o bin/nwg-dock-hyprland . 2>&1 | tee -a "$MLOG"; then
+    # PIPESTATUS[0], not the pipeline status: `go build | tee` reports tee's
+    # exit code, so a failed compile looked like a successful build and the
+    # Makefile fallback was never reached.
+    "$GO_BIN" build -v -o bin/nwg-dock-hyprland . 2>&1 | tee -a "$MLOG"
+    GO_BUILD_STATUS=${PIPESTATUS[0]}
+
+    if [ "$GO_BUILD_STATUS" -eq 0 ]; then
         [ -f bin/nwg-dock-hyprland ] && [ -x bin/nwg-dock-hyprland ] && BUILD_SUCCESS=1
     elif [ -f Makefile ] && grep -q '^build:' Makefile; then
-        if make -B build 2>&1 | tee -a "$MLOG"; then
+        make -B build 2>&1 | tee -a "$MLOG"
+        if [ "${PIPESTATUS[0]}" -eq 0 ]; then
             if [ -f bin/nwg-dock-hyprland ] && [ -x bin/nwg-dock-hyprland ]; then
                 BUILD_SUCCESS=1
             elif [ -f nwg-dock-hyprland ] && [ -x nwg-dock-hyprland ]; then
