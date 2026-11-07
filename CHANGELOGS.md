@@ -3,6 +3,10 @@
 ## Nov 2026
 
 - Fixed:
+    - `ags.sh` could never install AGS
+        - `LOG` and `MLOG` were relative to the repo root, but the script `cd`s into `ags_v1.9.0` before writing them
+        - `npm install >> "$MLOG"` failed on the redirect, so every run reported "npm install failed" and exited 1
+        - Both logs are now anchored to `$PARENT_DIR/Install-Logs`
     - `./install.sh --preset preset.sh` was ignored
         - The checklist used hardcoded `OFF` values instead of the preset variables
         - Preset values are now normalized to `ON`/`OFF`, so a lowercase or mistyped value cannot break the menu
