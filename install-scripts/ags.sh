@@ -45,8 +45,8 @@ if ! source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"; then
 fi
 
 # Set the name of the log file to include the current date and time
-LOG="Install-Logs/install-$(date +%d-%H%M%S)_ags.log"
-MLOG="Install-Logs/install-$(date +%d-%H%M%S)_ags2.log"
+LOG="$PARENT_DIR/Install-Logs/install-$(date +%d-%H%M%S)_ags.log"
+MLOG="$PARENT_DIR/Install-Logs/install-$(date +%d-%H%M%S)_ags2.log"
 
 # Check if AGS is installed
 if command -v ags &>/dev/null; then
