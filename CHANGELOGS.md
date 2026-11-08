@@ -3,6 +3,11 @@
 ## Nov 2026
 
 - Fixed:
+    - `Install-Logs` was created relative to the caller's cwd
+        - `Global_functions.sh` ran a bare `mkdir Install-Logs`, so a module started from another directory wrote its logs outside the repo
+        - `hyprland.sh` and `nvidia.sh` repeated the same relative `mkdir`
+        - The directory is now resolved from `$PARENT_DIR`, and every module writes its log to `$LOG_DIR`
+- Fixed:
     - `ags.sh` could never install AGS
         - `LOG` and `MLOG` were relative to the repo root, but the script `cd`s into `ags_v1.9.0` before writing them
         - `npm install >> "$MLOG"` failed on the redirect, so every run reported "npm install failed" and exited 1

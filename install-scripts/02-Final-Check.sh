@@ -58,7 +58,7 @@ if ! source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"; then
 fi
 
 # Set the name of the log file to include the current date and time
-LOG="Install-Logs/00_CHECK-$(date +%d-%H%M%S)_installed.log"
+LOG="$LOG_DIR/00_CHECK-$(date +%d-%H%M%S)_installed.log"
 MIN_YAZI_VERSION="26.5.0"
 
 version_ge() {

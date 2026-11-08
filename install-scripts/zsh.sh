@@ -30,12 +30,12 @@ if ! source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"; then
 fi
 
 # Set the name of the log file to include the current date and time
-LOG="Install-Logs/install-$(date +%d-%H%M%S)_zsh.log"
+LOG="$LOG_DIR/install-$(date +%d-%H%M%S)_zsh.log"
 
 # Check if the log file already exists, if yes, append a counter to make it unique
 COUNTER=1
 while [ -f "$LOG" ]; do
-  LOG="Install-Logs/install-$(date +%d-%H%M%S)_${COUNTER}_zsh.log"
+  LOG="$LOG_DIR/install-$(date +%d-%H%M%S)_${COUNTER}_zsh.log"
   ((COUNTER++))
 done
 

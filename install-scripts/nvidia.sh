@@ -30,12 +30,8 @@ fi
 
 
 # Create Directory for Install Logs
-if [ ! -d Install-Logs ]; then
-    mkdir Install-Logs
-fi
-
 # Set the name of the log file to include the current date and time
-LOG="Install-Logs/install-$(date +%d-%H%M%S)_nvidia.log"
+LOG="$LOG_DIR/install-$(date +%d-%H%M%S)_nvidia.log"
 
 
 # Install additional Nvidia packages

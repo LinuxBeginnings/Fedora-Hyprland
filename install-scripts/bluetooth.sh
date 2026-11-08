@@ -30,7 +30,7 @@ if ! source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"; then
 fi
 
 # Set the name of the log file to include the current date and time
-LOG="Install-Logs/install-$(date +%d-%H%M%S)_bluetooth.log"
+LOG="$LOG_DIR/install-$(date +%d-%H%M%S)_bluetooth.log"
 
 # Bluetooth
 printf "${NOTE} Installing ${SKY_BLUE}Bluetooth${RESET} Packages...\n"
