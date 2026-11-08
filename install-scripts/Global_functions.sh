@@ -8,13 +8,12 @@
 # 💫 https://github.com/KoolDots 💫 #
 # Global Functions for Scripts #
 
-# Create Directory for Install Logs
-if [ ! -d Install-Logs ]; then
-    mkdir Install-Logs
-fi
+# Install logs live under the repo root, never relative to the caller's cwd
+LOG_DIR="${PARENT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/Install-Logs"
+mkdir -p "$LOG_DIR"
 
 # Log file
-LOG="Install-Logs/install.log"
+LOG="$LOG_DIR/install.log"
 
 # Set some colors for output messages
 OK="$(tput setaf 2)[OK]$(tput sgr0)"

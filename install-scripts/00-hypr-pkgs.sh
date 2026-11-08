@@ -121,7 +121,7 @@ if ! source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"; then
 fi
 
 # Set the name of the log file to include the current date and time
-LOG="Install-Logs/install-$(date +%d-%H%M%S)_hypr-pkgs.log"
+LOG="$LOG_DIR/install-$(date +%d-%H%M%S)_hypr-pkgs.log"
 # Check rofi presence and version (skip if >= 2.00)
 skip_rofi=false
 if rpm -q rofi &>/dev/null; then

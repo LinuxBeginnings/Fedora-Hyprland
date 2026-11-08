@@ -55,7 +55,7 @@ if ! source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"; then
 fi
 
 # Set the name of the log file
-LOG="Install-Logs/install-$(date +%d-%H%M%S)_copr.log"
+LOG="$LOG_DIR/install-$(date +%d-%H%M%S)_copr.log"
 
 # Function to add dnf config if not present
 add_config_if_not_present() {
