@@ -16,6 +16,7 @@ packages=(
     qt5-qtdeclarative
     qt5-qtquickcontrols2
     qt6-qtdeclarative
+    qalculate-gtk
     rofi
     ImageMagick
     SwayNotificationCenter

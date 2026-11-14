@@ -52,6 +52,7 @@ hypr_package=(
     python3-requests
     python3-pip
     python3-pyquery
+    qalculate-gtk # required by the rofi-calc keybind (SUPER ALT C)
     qt5ct
     qt6ct
     qt6-qtsvg
@@ -86,7 +87,6 @@ hypr_package_2=(
     mpv
     mpv-mpris
     nvtop
-    qalculate-gtk
 )
 
 copr_packages=(
