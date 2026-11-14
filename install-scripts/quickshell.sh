@@ -58,6 +58,33 @@ done
 
 printf "\n%.0s" {1..1}
 
+# quickshell-git and quickshell ship the same files (e.g. /usr/bin/quickshell),
+# so dnf aborts with a file conflict when the git build is still installed.
+# Remove it before installing the packaged release.
+remove_quickshell_git() {
+    if ! rpm -q quickshell-git &>/dev/null; then
+        return 0
+    fi
+
+    printf "\n%s - ${YELLOW}quickshell-git${RESET} is installed and conflicts with ${SKY_BLUE}quickshell${RESET}. Removing it first...\n" "${NOTE}"
+    sudo dnf remove -y quickshell-git >>"$LOG" 2>&1
+
+    if rpm -q quickshell-git &>/dev/null; then
+        printf "\n%s - Failed to remove ${YELLOW}quickshell-git${RESET}. See $LOG\n" "${ERROR}"
+        return 1
+    fi
+
+    echo "${OK} quickshell-git removed." | tee -a "$LOG"
+    return 0
+}
+
+# Skip only when the packaged release is already present (nothing to install)
+if ! rpm -q quickshell &>/dev/null; then
+    remove_quickshell_git || exit 1
+fi
+
+printf "\n%.0s" {1..1}
+
 # Installation of main components
 printf "\n%s - Installing ${SKY_BLUE}Quickshell for Desktop Overview${RESET} \n" "${NOTE}"
 

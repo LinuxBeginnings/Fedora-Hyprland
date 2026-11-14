@@ -3,6 +3,12 @@
 ## Nov 2026
 
 - Fixed:
+    - `quickshell.sh` failed when `quickshell-git` was already installed
+        - Both packages ship `/usr/bin/quickshell`, so the COPR install aborted with `file /usr/bin/quickshell conflicts between attempted installs of quickshell and quickshell-git`
+        - `quickshell-git` is now removed before `quickshell` is installed, and the script exits with an error if it cannot be removed
+        - `02-Final-Check.sh` accepts `quickshell-git` as satisfying the `quickshell` requirement
+        - `uninstall.sh` can now remove the `quickshell-git` build as well
+- Fixed:
     - `Install-Logs` was created relative to the caller's cwd
         - `Global_functions.sh` ran a bare `mkdir Install-Logs`, so a module started from another directory wrote its logs outside the repo
         - `hyprland.sh` and `nvidia.sh` repeated the same relative `mkdir`

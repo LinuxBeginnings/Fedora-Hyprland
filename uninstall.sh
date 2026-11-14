@@ -170,6 +170,7 @@ packages=(
     "qt5ct" "qt5ct" "off"
     "qt6ct" "qt6ct" "off"
     "quickshell" "quickshell desktop overview (required by the dots)" "off"
+    "quickshell-git" "quickshell git build (conflicts with quickshell)" "off"
     "rofi" "rofi launcher" "off"
     "slurp" "screenshot tool" "off"
     "swappy" "screenshot tool" "off"

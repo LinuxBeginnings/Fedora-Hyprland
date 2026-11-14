@@ -107,7 +107,13 @@ else
 fi
 
 # Function to check if a package is installed using rpm (Fedora)
+# quickshell-git ships the same binary as quickshell, so it satisfies the
+# requirement until install-scripts/quickshell.sh replaces it with the release
+# package (which it does, since both own /usr/bin/quickshell).
 is_installed_rpm() {
+    if [ "$1" = "quickshell" ] && rpm -q quickshell-git &>/dev/null; then
+        return 0
+    fi
     rpm -q "$1" &>/dev/null
 }
 
